@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katyayani Partner App - Figma-Style Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined|Material+Icons|Material+Icons+Round" rel="stylesheet">
+<style>
+:root{
+  --green:#1B6B2A;--gd:#145222;--gl:#2E7D32;--gg:rgba(27,107,42,.15);
+  --gold:#FFD700;--bronze:#CD7F32;--red:#E53935;
+  --bg:#f7f6f2;--card:#fff;--bdr:#eaeaea;
+  --t1:#1a1a1a;--t2:#555;--t3:#999;
+  --sh:0 4px 20px rgba(0,0,0,.06);--shl:0 8px 32px rgba(0,0,0,.1);
+  --r:16px;--rs:12px;--rx:8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:#1e1e1e;
+  color:#fff;min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ===== FIGMA TOOLBAR ===== */
+.toolbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:48px;background:#2c2c2c;border-bottom:1px solid #3a3a3a;
+  display:flex;align-items:center;padding:0 16px;gap:12px;
+}
+.toolbar .logo{font-size:14px;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}
+.toolbar .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.toolbar .sep{width:1px;height:24px;background:#3a3a3a}
+.toolbar .tabs{display:flex;gap:2px;flex:1;justify-content:center}
+.toolbar .tab{
+  padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;
+  color:#888;cursor:pointer;transition:all .2s;user-select:none;
+}
+.toolbar .tab:hover{color:#ccc;background:#333}
+.toolbar .tab.on{color:#fff;background:#4a4a4a}
+.toolbar .zoom{display:flex;align-items:center;gap:8px;font-size:12px;color:#888}
+.toolbar .zoom button{
+  width:28px;height:28px;border-radius:6px;border:1px solid #3a3a3a;
+  background:#2c2c2c;color:#ccc;font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.toolbar .zoom button:hover{background:#3a3a3a}
+
+/* ===== LEFT PANEL (Layers) ===== */
+.left-panel{
+  position:fixed;left:0;top:48px;bottom:0;width:220px;
+  background:#252525;border-right:1px solid #333;
+  overflow-y:auto;padding:12px 0;z-index:999;
+  transition:transform .3s;
+}
+.left-panel.hidden{transform:translateX(-220px)}
+.lp-title{font-size:10px;font-weight:700;color:#666;letter-spacing:1.5px;text-transform:uppercase;padding:8px 14px}
+.lp-item{
+  padding:7px 14px 7px 20px;font-size:12px;color:#aaa;cursor:pointer;
+  display:flex;align-items:center;gap:8px;transition:all .15s;
+  border-left:2px solid transparent;
+}
+.lp-item:hover{background:#2a2a2a;color:#fff}
+.lp-item.on{background:#1B6B2A22;color:var(--green);border-left-color:var(--green)}
+.lp-item .material-icons{font-size:16px;opacity:.5}
+
+/* ===== CANVAS ===== */
+.canvas{
+  margin-left:220px;margin-top:48px;
+  padding:40px 30px 60px;
+  min-height:calc(100vh - 48px);
+  overflow-x:auto;
+  transition:margin-left .3s;
+}
+.canvas.full{margin-left:0}
+
+/* Section titles on canvas */
+.section-label{
+  font-size:11px;font-weight:700;color:#666;letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:16px;padding-left:4px;
+}
+.screen-row{display:flex;gap:32px;flex-wrap:nowrap;padding-bottom:40px;overflow-x:auto}
+.screen-row::-webkit-scrollbar{height:6px}
+.screen-row::-webkit-scrollbar-thumb{background:#444;border-radius:3px}
+
+.screen-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.screen-name{
+  font-size:10px;font-weight:700;color:#777;letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.screen-name .dot{width:6px;height:6px;border-radius:50%}
+.screen-name .dot.g{background:#4CAF50}
+.screen-name .dot.b{background:#42A5F5}
+.screen-name .dot.p{background:#AB47BC}
+.screen-name .dot.o{background:#FF9800}
+
+/* Annotation */
+.anno{
+  font-size:9px;color:#FF6B6B;font-weight:600;
+  background:rgba(255,107,107,.1);padding:2px 6px;border-radius:3px;
+  position:absolute;z-index:5;white-space:nowrap;
+  border:1px dashed rgba(255,107,107,.3);
+  display:none;
+}
+.ph:hover .anno{display:block}
+
+/* ===== PHONE FRAME ===== */
+.ph{
+  width:360px;height:780px;
+  background:var(--bg);border-radius:36px;
+  overflow:hidden;
+  box-shadow:0 0 0 2px #111,0 0 0 4px #2a2a2a,var(--shl),0 40px 80px rgba(0,0,0,.25);
+  display:flex;flex-direction:column;position:relative;
+  transition:transform .3s,box-shadow .3s;
+}
+.ph:hover{transform:translateY(-4px);box-shadow:0 0 0 2px #1B6B2A,0 0 0 4px #2a2a2a,0 12px 40px rgba(27,107,42,.2),0 50px 90px rgba(0,0,0,.3)}
+
+/* Notch */
+.ph::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:100;width:120px;height:24px;background:#111;border-radius:0 0 16px 16px}
+
+/* ===== REUSABLE COMPONENTS ===== */
+.topbar{background:linear-gradient(135deg,var(--green),var(--gl));padding:32px 14px 10px;flex-shrink:0;position:relative;overflow:hidden}
+.topbar::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04)}
+.topbar-row1{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f0d48a,#d4a56a);border:2.5px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.avatar .material-icons{font-size:26px;color:#7a4a1a}
+.welcome{flex:1}
+.welcome .w1{font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.badges{display:flex;gap:6px;margin-top:5px}
+.bp{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:700;backdrop-filter:blur(8px)}
+.bp.br{background:rgba(205,127,50,.25);color:#fff;border:1px solid rgba(205,127,50,.3)}
+.bp.br .material-icons{font-size:13px;color:var(--bronze)}
+.bp.co{background:rgba(255,215,0,.2);color:#fff;border:1px solid rgba(255,215,0,.25)}
+.bp.co .material-icons{font-size:13px;color:var(--gold)}
+.topicons{display:flex;align-items:center;gap:8px}
+.topicons .bell{padding:4px}.topicons .bell .material-icons-outlined{font-size:23px;color:var(--gold)}
+.topicons .cw{position:relative;padding:4px}.topicons .cw .material-icons-outlined{font-size:23px;color:#fff}
+.topicons .bc{position:absolute;top:0;right:0;background:var(--red);color:#fff;font-size:8px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--green);box-shadow:0 2px 4px rgba(229,57,53,.4)}
+
+.sbar{margin:10px 14px;padding:11px 16px;background:var(--card);border-radius:28px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.05);border:1px solid var(--bdr)}
+.sbar .material-icons{font-size:20px;color:var(--green)}
+.sbar span{flex:1;font-size:13.5px;color:#bbb;font-weight:500}
+.sbar .mic{font-size:20px;color:var(--t3)}
+
+.scroll{flex:1;overflow-y:auto;background:var(--bg)}.scroll::-webkit-scrollbar{width:0}
+
+/* Banner */
+.bnr{margin:6px 14px;border-radius:var(--r);overflow:hidden;height:160px;position:relative;box-shadow:0 6px 24px rgba(27,107,42,.2)}
+.bnr img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.bdots{display:flex;justify-content:center;gap:5px;padding:8px 0}
+.bd{width:7px;height:7px;border-radius:50%;background:#ddd}.bd.on{background:var(--green);width:20px;border-radius:4px}
+
+/* Categories */
+.csec{padding:16px 14px 0}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ch h3{font-size:17px;font-weight:800;color:var(--t1)}
+.ch a{font-size:12px;font-weight:700;color:var(--green);text-decoration:none;padding:4px 10px;border-radius:20px;background:var(--gg)}
+.cr{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}.cr::-webkit-scrollbar{display:none}
+.ci-w{display:flex;flex-direction:column;align-items:center;min-width:68px;gap:5px;cursor:pointer}
+.ci-b{width:54px;height:54px;border-radius:16px;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(0,0,0,.06);border:1px solid var(--bdr);transition:transform .2s}
+.ci-w:hover .ci-b{transform:translateY(-2px)}
+.ci-b .material-icons{font-size:26px}
+.ci-w span{font-size:9.5px;font-weight:600;color:var(--t2);text-align:center}
+
+/* Strip banner */
+.strip{margin:12px 14px;border-radius:var(--rs);overflow:hidden;height:52px;box-shadow:0 4px 16px rgba(27,107,42,.15)}
+.strip img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Featured grid */
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px 14px}
+.fc{background:var(--card);border-radius:var(--rs);overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.05);border:1px solid var(--bdr);cursor:pointer;transition:transform .2s}
+.fc:hover{transform:translateY(-3px)}
+.fc .fi{height:74px;display:flex;align-items:center;justify-content:center;background:#faf9f6;overflow:hidden}
+.fc .fi img{width:100%;height:100%;object-fit:contain;padding:6px;transition:transform .3s}
+.fc:hover .fi img{transform:scale(1.08)}
+.fc .fn{padding:5px 6px 7px;background:linear-gradient(135deg,var(--green),var(--gl));color:#fff;font-size:8px;font-weight:700;text-align:center;letter-spacing:.2px}
+
+/* New arrivals */
+.nab{margin:10px 14px;border-radius:var(--rs);background:linear-gradient(135deg,#0d3d15,var(--green));padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 16px rgba(27,107,42,.2)}
+.nab .material-icons{font-size:28px;color:var(--gold)}
+.nab h4{font-size:13px;font-weight:800;color:#fff}.nab p{font-size:10px;color:rgba(255,255,255,.75)}
+
+/* Product cards */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px}
+.pc{background:var(--card);border-radius:var(--rs);overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.05);border:1px solid var(--bdr);cursor:pointer;transition:transform .2s}
+.pc:hover{transform:translateY(-3px)}
+.pc .pi{height:115px;background:#faf9f6;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pc .pi img{width:100%;height:100%;object-fit:contain;padding:8px;transition:transform .3s}
+.pc:hover .pi img{transform:scale(1.06)}
+.pc .pi .ht{position:absolute;top:8px;right:8px;font-size:18px;color:#ddd;background:var(--card);border-radius:50%;padding:4px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.pc .pi .qty{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(90deg,var(--green),var(--gl));color:#fff;font-size:9px;font-weight:700;text-align:center;padding:3.5px 0}
+.pc .pd{padding:8px 10px 10px}
+.pc .pd .pn{font-size:10.5px;font-weight:600;color:var(--t1);line-height:1.35;height:28px;overflow:hidden}
+.pc .pd .mrp{font-size:10px;color:var(--t3);text-decoration:line-through;margin-top:4px}
+.pc .pd .pr-r{display:flex;align-items:center;gap:5px;margin-top:2px}
+.pc .pd .pr-r .pr{font-size:14px;font-weight:800;color:var(--t1)}
+.pc .pd .pr-r .ds{font-size:9px;font-weight:800;color:var(--red);background:rgba(229,57,53,.08);padding:2px 6px;border-radius:4px}
+.pc .pd .ab{margin-top:8px;width:100%;padding:7px 0;background:linear-gradient(135deg,var(--green),var(--gl));color:#fff;border:none;border-radius:var(--rx);font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px var(--gg)}
+.pc .pd .opts{font-size:9px;color:var(--t3);text-align:center;margin-top:3px}
+
+/* Pest banner */
+.pbr{margin:10px 14px;border-radius:var(--r);height:85px;background:linear-gradient(135deg,#0d3d15,var(--green));display:flex;align-items:center;padding:0 18px;box-shadow:0 4px 16px rgba(27,107,42,.2);position:relative;overflow:hidden}
+.pbr h3{font-size:22px;font-weight:900;color:#fff;letter-spacing:1.5px}.pbr p{font-size:10px;color:rgba(255,255,255,.65)}
+.pbr .pimgs{position:absolute;right:10px;display:flex;gap:4px}
+.pbr .pimgs img{height:62px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.2))}
+
+/* View All */
+.vab{margin:6px 14px;padding:11px;text-align:center;background:var(--card);border-radius:var(--rx);font-size:13px;font-weight:700;color:var(--green);box-shadow:0 2px 10px rgba(0,0,0,.04);border:1.5px solid var(--gg);cursor:pointer}
+
+/* FAB */
+.fab{position:absolute;bottom:68px;right:14px;z-index:10;width:48px;height:48px;border-radius:14px;background:var(--card);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(27,107,42,.2);cursor:pointer}
+.fab .material-icons{font-size:24px;color:var(--green)}
+
+/* Bottom nav */
+.bnav{display:flex;align-items:center;justify-content:space-around;height:56px;flex-shrink:0;background:linear-gradient(135deg,var(--green),var(--gd));position:relative}
+.bnav::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent)}
+.bnav .ni{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:rgba(255,255,255,.5);cursor:pointer;width:56px;position:relative;z-index:1}
+.bnav .ni.on{color:#fff}
+.bnav .ni.on::before{content:'';position:absolute;top:-2px;width:24px;height:3px;border-radius:0 0 3px 3px;background:var(--gold)}
+.bnav .ni .material-icons,.bnav .ni .material-icons-outlined{font-size:22px}
+
+/* ===== CATEGORY SCREEN ===== */
+.ctb{background:linear-gradient(135deg,var(--green),var(--gl));padding:32px 14px 12px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.ctb .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f0d48a,#d4a56a);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.ctb .av .material-icons{font-size:22px;color:#7a4a1a}
+.ctb .icons{display:flex;gap:14px}.ctb .icons .material-icons{font-size:24px;color:#fff}
+.ct-t{padding:18px 14px 8px;font-size:20px;font-weight:900;color:var(--green)}
+.ct-st{padding:2px 14px 8px;font-size:13px;font-weight:700;color:var(--green)}
+.cc{margin:0 14px 10px;background:var(--card);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:14px;box-shadow:0 3px 12px rgba(0,0,0,.05);border:1px solid var(--bdr);cursor:pointer;transition:transform .2s}
+.cc:hover{transform:translateX(4px)}
+.cc .ci{width:52px;height:52px;border-radius:14px;background:#f5f5f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;border:1px solid var(--bdr)}
+.cc .ci img{width:100%;height:100%;object-fit:cover}
+.cc .cn{flex:1;font-size:15px;font-weight:700;color:var(--t1)}
+.cc .arr{font-size:20px;color:var(--t3)}
+.clr{margin:0 14px 8px;background:var(--card);border-radius:var(--rx);padding:10px 12px;display:flex;align-items:center;gap:10px;border:1px solid var(--bdr);cursor:pointer;transition:transform .2s}
+.clr:hover{transform:translateX(2px)}
+.clr .ct{width:38px;height:38px;border-radius:10px;background:#f5f5f0;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;border:1px solid var(--bdr)}
+.clr .ct img{width:100%;height:100%;object-fit:cover}
+.clr .cname{flex:1;font-size:13px;font-weight:600;color:var(--t1)}
+.clr .ca{display:flex;gap:8px}.clr .ca .material-icons-outlined{font-size:22px}
+.clr .ca .vw{color:var(--green)}.clr .ca .dl{color:#FF9800}
+
+/* ===== VIP ===== */
+.vbg{flex:1;overflow-y:auto;padding:32px 16px 16px;background:linear-gradient(180deg,var(--green),#0f4a1a);position:relative}
+.vbg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 10%,rgba(255,215,0,.06),transparent 50%),radial-gradient(circle at 20% 90%,rgba(255,255,255,.03),transparent 40%)}
+.vbg::-webkit-scrollbar{width:0}
+.vh{text-align:center;position:relative;z-index:1}
+.vh .tr{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:14px}
+.vh .tr .material-icons{font-size:22px;color:rgba(255,255,255,.6)}
+.vh .tr h2{font-size:18px;font-weight:800;color:#fff}
+.vh .crn{font-size:60px;color:var(--gold);filter:drop-shadow(0 4px 12px rgba(255,215,0,.3))}
+.vh .bb{display:inline-flex;align-items:center;gap:5px;background:rgba(205,127,50,.3);padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;color:#fff;border:1px solid rgba(205,127,50,.3)}
+.vh .bb .material-icons{font-size:15px;color:var(--bronze)}
+.vh .un{font-size:20px;font-weight:900;color:#fff;margin-top:6px}
+.vs{margin-top:14px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);padding:14px 16px;display:flex;align-items:center;gap:12px;position:relative;z-index:1;cursor:pointer}
+.vs:hover{background:rgba(255,255,255,.12)}
+.vs .material-icons,.vs .material-icons-outlined{font-size:28px;color:var(--gold)}
+.vs .vsi{flex:1}.vs .vsi h3{font-size:22px;font-weight:900;color:#fff}.vs .vsi span{font-size:11px;color:rgba(255,255,255,.6)}
+.vs .arr{font-size:20px;color:rgba(255,255,255,.4)}
+.tiers{display:flex;align-items:center;justify-content:space-between;margin:22px 0;position:relative;z-index:1}
+.tier{display:flex;flex-direction:column;align-items:center;gap:5px}
+.tier .hex{width:38px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.tier .hex.a{background:var(--bronze);box-shadow:0 3px 10px rgba(205,127,50,.3)}
+.tier .hex.i{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.08)}
+.tier .hex .material-icons{font-size:22px}
+.tier .tn{font-size:9px;font-weight:700;color:rgba(255,255,255,.6)}.tier .ta{font-size:8px;color:rgba(255,255,255,.35)}
+.tl{position:absolute;top:21px;left:30px;right:30px;height:2px;background:rgba(255,255,255,.1);z-index:0}
+.vi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--rs);padding:14px;margin:10px 0;font-size:12.5px;color:rgba(255,255,255,.8);text-align:center;position:relative;z-index:1}
+.bt{text-align:center;margin:18px 0 12px;font-size:18px;font-weight:800;color:#fff;position:relative;z-index:1}
+.bt .material-icons{font-size:18px;color:var(--gold);vertical-align:middle}
+.bfc{background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border-radius:var(--rs);padding:16px;margin-bottom:10px;border:1.5px solid rgba(0,200,200,.2);position:relative;z-index:1}
+.bfc .bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.bfc .bh h4{font-size:17px;font-weight:800;color:#4DD0E1}
+.bfc .bh .lk{font-size:11px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:3px}
+.bfc .bh .lk .material-icons{font-size:14px}
+.bfc .bh .hr{font-size:10px;font-weight:700;color:#fff;background:rgba(77,208,225,.15);padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:3px;border:1px solid rgba(77,208,225,.2)}
+.bfc .bh .hr .material-icons{font-size:12px;color:#4DD0E1}
+.bfc .bi{display:flex;align-items:flex-start;gap:10px;margin-top:8px}
+.bfc .bi .material-icons{font-size:18px;color:var(--gold);flex-shrink:0}
+.bfc .bi span{font-size:12px;color:rgba(255,255,255,.8)}
+
+/* ===== PROFILE ===== */
+.pt{background:linear-gradient(135deg,var(--green),var(--gl));padding:32px 14px 14px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.pt .av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f0d48a,#d4a56a);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.pt .av .material-icons{font-size:26px;color:#7a4a1a}
+.pt .pi{background:rgba(255,255,255,.15);border-radius:10px;padding:8px}
+.pt .pi .material-icons{font-size:20px;color:#fff}
+.pbanner{margin:0 14px;padding:10px 14px;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;gap:10px;margin-top:10px;border:1px solid rgba(255,255,255,.1)}
+.pbanner span{flex:1;font-size:12px;color:rgba(255,255,255,.9);font-weight:500}
+.pbanner .btn{background:#fff;color:var(--green);border:none;padding:8px 14px;border-radius:var(--rx);font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer}
+.pge{height:16px;background:linear-gradient(135deg,var(--green),var(--gl));flex-shrink:0}
+.pcard{margin:12px 14px 0;background:linear-gradient(135deg,var(--green),var(--gd));border-radius:var(--r);padding:16px;position:relative;overflow:hidden;box-shadow:0 6px 24px rgba(27,107,42,.2)}
+.pcard .ed{position:absolute;top:12px;right:12px}.pcard .ed .material-icons{font-size:18px;color:rgba(255,255,255,.6)}
+.pcard .coins{position:absolute;bottom:12px;right:14px;display:flex;align-items:center;gap:4px}
+.pcard .coins .material-icons{font-size:18px;color:var(--gold)}.pcard .coins span{font-size:17px;font-weight:800;color:#fff}
+.pcard h3{font-size:17px;font-weight:800;color:#fff;margin-bottom:8px}
+.pcard .ir{display:flex;align-items:center;gap:8px;margin-top:4px}
+.pcard .ir .material-icons{font-size:14px;color:rgba(255,255,255,.5)}.pcard .ir span{font-size:12px;color:rgba(255,255,255,.7)}
+.pp{padding:18px 14px 14px}
+.pp .pph{display:flex;justify-content:space-between;margin-bottom:8px}
+.pp .pph span:first-child{font-size:14px;font-weight:600;color:var(--t3)}
+.pp .pph span:last-child{font-size:14px;font-weight:800;color:var(--green)}
+.pp .bar{height:8px;background:#eee;border-radius:4px;overflow:hidden}
+.pp .bar .fill{height:100%;width:46%;background:linear-gradient(90deg,var(--green),var(--gl));border-radius:4px}
+.pm{padding:0 14px}
+.pm .pmi{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:padding-left .2s}
+.pm .pmi:hover{padding-left:4px}
+.pm .pmi .material-icons-outlined{font-size:22px;color:var(--green)}
+.pm .pmi span{flex:1;font-size:14px;font-weight:600;color:var(--t1)}
+.pm .pmi .arr{font-size:20px;color:#ddd}
+.pm .pmi .lock{font-size:18px;color:var(--t3)}
+
+/* ===== SEARCH SCREEN ===== */
+.search-active .sbar{border:2px solid var(--green);box-shadow:0 4px 20px var(--gg)}
+.search-input{
+  margin:0 14px;background:var(--card);border-radius:14px;overflow:hidden;
+  border:1px solid var(--bdr);box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.search-input .si-head{padding:12px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bdr)}
+.search-input .si-head .material-icons{font-size:20px;color:var(--green)}
+.search-input .si-head input{border:none;outline:none;flex:1;font-size:14px;font-family:inherit;font-weight:500;color:var(--t1);background:transparent}
+.search-input .si-head input::placeholder{color:#ccc}
+.search-input .si-head .clear{font-size:18px;color:var(--t3);cursor:pointer}
+.recent-title{padding:16px 14px 8px;font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px}
+.recent-item{padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .15s}
+.recent-item:hover{background:#f5f5f0}
+.recent-item .material-icons{font-size:18px;color:var(--t3)}
+.recent-item span{font-size:13px;color:var(--t1);font-weight:500;flex:1}
+.recent-item .arrow{font-size:16px;color:#ddd}
+.trending-tag{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:20px;background:var(--card);border:1px solid var(--bdr);font-size:11px;font-weight:600;color:var(--t2);margin:3px;cursor:pointer;transition:all .2s}
+.trending-tag:hover{border-color:var(--green);color:var(--green);background:var(--gg)}
+
+/* ===== CART SCREEN ===== */
+.cart-item{
+  margin:0 14px 10px;background:var(--card);border-radius:var(--rs);
+  padding:12px;display:flex;gap:12px;
+  border:1px solid var(--bdr);box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.cart-item .ci-img{width:80px;height:80px;border-radius:10px;background:#faf9f6;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--bdr)}
+.cart-item .ci-img img{width:100%;height:100%;object-fit:contain;padding:4px}
+.cart-item .ci-info{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.cart-item .ci-info .ci-name{font-size:12px;font-weight:600;color:var(--t1);line-height:1.3}
+.cart-item .ci-info .ci-qty{font-size:10px;color:var(--t3);margin-top:2px}
+.cart-item .ci-info .ci-price{font-size:15px;font-weight:800;color:var(--t1)}
+.cart-item .ci-info .ci-mrp{font-size:10px;color:var(--t3);text-decoration:line-through}
+.cart-item .ci-actions{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between}
+.cart-item .ci-actions .del{font-size:20px;color:var(--t3);cursor:pointer;transition:color .2s}
+.cart-item .ci-actions .del:hover{color:var(--red)}
+.qty-ctrl{display:flex;align-items:center;gap:0;border:1.5px solid var(--bdr);border-radius:8px;overflow:hidden}
+.qty-ctrl button{width:28px;height:28px;border:none;background:var(--card);font-size:16px;font-weight:700;color:var(--green);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-ctrl button:hover{background:var(--gg)}
+.qty-ctrl .q{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--t1);background:#faf9f6}
+
+.cart-summary{
+  margin:10px 14px;background:var(--card);border-radius:var(--rs);padding:14px;
+  border:1px solid var(--bdr);box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.cs-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;color:var(--t2);font-weight:500}
+.cs-row.total{font-size:16px;font-weight:800;color:var(--t1);border-top:1.5px dashed var(--bdr);padding-top:10px;margin-top:6px}
+.cs-row .green{color:var(--green);font-weight:700}
+.checkout-btn{
+  margin:12px 14px;padding:14px;text-align:center;
+  background:linear-gradient(135deg,var(--green),var(--gl));
+  color:#fff;border-radius:var(--rs);font-size:15px;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 20px var(--gg);
+  letter-spacing:.5px;transition:transform .15s;
+}
+.checkout-btn:hover{transform:translateY(-2px)}
+
+/* ===== PRODUCT DETAIL ===== */
+.pd-gallery{height:220px;background:#faf9f6;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pd-gallery img{height:90%;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.1))}
+.pd-gallery .back-btn{position:absolute;top:36px;left:12px;width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:5}
+.pd-gallery .back-btn .material-icons{font-size:20px;color:var(--t1)}
+.pd-gallery .share-btn{position:absolute;top:36px;right:12px;width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:5}
+.pd-gallery .share-btn .material-icons{font-size:20px;color:var(--t1)}
+.pd-gallery .fav-btn{position:absolute;top:36px;right:56px;width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:5}
+.pd-gallery .fav-btn .material-icons{font-size:20px;color:var(--red)}
+.pd-gallery .img-dots{position:absolute;bottom:10px;display:flex;gap:4px}
+.pd-gallery .img-dots .d{width:6px;height:6px;border-radius:50%;background:#ccc}.pd-gallery .img-dots .d.on{background:var(--green);width:16px;border-radius:3px}
+
+.pd-body{padding:16px 14px}
+.pd-body .tag-row{display:flex;gap:6px;margin-bottom:8px}
+.pd-body .tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.pd-body .tag.pest-t{background:rgba(27,107,42,.1);color:var(--green)}
+.pd-body .tag.disc-t{background:rgba(229,57,53,.08);color:var(--red)}
+.pd-body .pd-name{font-size:16px;font-weight:800;color:var(--t1);line-height:1.3;margin-bottom:6px}
+.pd-body .pd-brand{font-size:12px;color:var(--t3);margin-bottom:12px}
+.pd-body .pd-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.pd-body .pd-price-row .big-pr{font-size:24px;font-weight:900;color:var(--t1)}
+.pd-body .pd-price-row .old-pr{font-size:14px;color:var(--t3);text-decoration:line-through}
+.pd-body .pd-price-row .disc-badge{font-size:11px;font-weight:800;color:#fff;background:var(--red);padding:3px 8px;border-radius:6px}
+.pd-body .pd-pack{font-size:11px;color:var(--t3);margin-bottom:14px}
+
+.variant-title{font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px}
+.variant-row{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto}
+.variant-row::-webkit-scrollbar{display:none}
+.variant-chip{
+  padding:8px 14px;border-radius:var(--rx);border:1.5px solid var(--bdr);
+  font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap;cursor:pointer;
+  transition:all .2s;background:var(--card);
+}
+.variant-chip.sel{border-color:var(--green);color:var(--green);background:var(--gg)}
+.pd-add-cart{
+  padding:14px;text-align:center;
+  background:linear-gradient(135deg,var(--green),var(--gl));
+  color:#fff;border-radius:var(--rs);font-size:15px;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 20px var(--gg);margin-top:8px;
+}
+.pd-specs{margin-top:16px}
+.pd-specs .spec-title{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.spec-row{display:flex;padding:8px 0;border-bottom:1px solid #f5f5f0}
+.spec-row .sk{font-size:12px;color:var(--t3);width:120px;flex-shrink:0;font-weight:500}
+.spec-row .sv{font-size:12px;color:var(--t1);font-weight:600;flex:1}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.scroll>*{animation:fadeUp .35s ease-out both}
+.scroll>*:nth-child(1){animation-delay:.03s}.scroll>*:nth-child(2){animation-delay:.06s}
+.scroll>*:nth-child(3){animation-delay:.09s}.scroll>*:nth-child(4){animation-delay:.12s}
+.scroll>*:nth-child(5){animation-delay:.15s}.scroll>*:nth-child(6){animation-delay:.18s}
+.scroll>*:nth-child(7){animation-delay:.21s}.scroll>*:nth-child(8){animation-delay:.24s}
+.scroll>*:nth-child(9){animation-delay:.27s}.scroll>*:nth-child(10){animation-delay:.3s}
+.scroll>*:nth-child(11){animation-delay:.33s}.scroll>*:nth-child(12){animation-delay:.36s}
+</style>
+</head>
+<body>
+
+<!-- FIGMA TOOLBAR -->
+<div class="toolbar">
+  <div class="logo"><div class="dot"></div>Katyayani Partner App</div>
+  <div class="sep"></div>
+  <div class="tabs">
+    <div class="tab on" onclick="showSection('main')">Main Screens</div>
+    <div class="tab" onclick="showSection('extra')">Cart / Search / Product</div>
+  </div>
+  <div class="sep"></div>
+  <div class="zoom">
+    <button onclick="zoomOut()">-</button>
+    <span id="zp">100%</span>
+    <button onclick="zoomIn()">+</button>
+  </div>
+</div>
+
+<!-- LEFT PANEL -->
+<div class="left-panel" id="lp">
+  <div class="lp-title">Screens</div>
+  <div class="lp-item on"><span class="material-icons">home</span>Home</div>
+  <div class="lp-item"><span class="material-icons">grid_view</span>Category</div>
+  <div class="lp-item"><span class="material-icons">star</span>VIP</div>
+  <div class="lp-item"><span class="material-icons">person</span>Profile</div>
+  <div class="lp-title" style="margin-top:12px">Additional</div>
+  <div class="lp-item"><span class="material-icons">search</span>Search</div>
+  <div class="lp-item"><span class="material-icons">shopping_cart</span>Cart</div>
+  <div class="lp-item"><span class="material-icons">inventory_2</span>Product Detail</div>
+  <div class="lp-title" style="margin-top:12px">Components</div>
+  <div class="lp-item"><span class="material-icons">widgets</span>Top Bar</div>
+  <div class="lp-item"><span class="material-icons">view_carousel</span>Banner</div>
+  <div class="lp-item"><span class="material-icons">credit_card</span>Product Card</div>
+  <div class="lp-item"><span class="material-icons">navigation</span>Bottom Nav</div>
+</div>
+
+<!-- CANVAS -->
+<div class="canvas" id="canvas">
+
+<!-- MAIN SCREENS -->
+<div id="sec-main">
+<div class="section-label">Main Screens</div>
+<div class="screen-row">
+
+<!-- HOME -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot g"></div>Home</div>
+<div class="ph">
+  <div class="topbar"><div class="topbar-row1">
+    <div class="avatar"><span class="material-icons">person</span></div>
+    <div class="welcome"><div class="w1">Welcome! vaibhaw</div><div class="badges"><div class="bp br"><span class="material-icons">shield</span>Bronze</div><div class="bp co"><span class="material-icons">monetization_on</span>25</div></div></div>
+    <div class="topicons"><div class="bell"><span class="material-icons-outlined">notifications</span></div><div class="cw"><span class="material-icons-outlined" style="color:#fff">shopping_cart</span><div class="bc">3</div></div></div>
+  </div></div>
+  <div class="sbar"><span class="material-icons">search</span><span>Search Products...</span><span class="material-icons mic">mic</span></div>
+  <div class="scroll">
+    <div class="bnr"><img class="hero-bg" src="assets/images/hero_banner.jpeg"></div>
+    <div class="bdots"><div class="bd on"></div><div class="bd"></div><div class="bd"></div></div>
+    <div class="csec"><div class="ch"><h3>Categories</h3><a href="#">View All</a></div>
+      <div class="cr">
+        <div class="ci-w"><div class="ci-b"><span class="material-icons" style="color:#2E7D32">inventory_2</span></div><span>All Products</span></div>
+        <div class="ci-w"><div class="ci-b" style="background:#ffebee;border-color:#ffcdd2"><span class="material-icons" style="color:#e53935">bug_report</span></div><span>Pesticide</span></div>
+        <div class="ci-w"><div class="ci-b" style="background:#e3f2fd;border-color:#bbdefb"><span class="material-icons" style="color:#1e88e5">grass</span></div><span>Fertilizer</span></div>
+        <div class="ci-w"><div class="ci-b" style="background:#f3e5f5;border-color:#e1bee7"><span class="material-icons" style="color:#8e24aa">eco</span></div><span>Fungicide</span></div>
+        <div class="ci-w"><div class="ci-b" style="background:#fff3e0;border-color:#ffe0b2"><span class="material-icons" style="color:#f57c00">spa</span></div><span>Herbicide</span></div>
+      </div>
+    </div>
+    <div class="strip"><img src="assets/images/strip_banner.jpeg"></div>
+    <div class="fg">
+      <div class="fc"><div class="fi"><img src="assets/images/humic_acid.webp"></div><div class="fn">HUMIC + FULVIC 98</div></div>
+      <div class="fc"><div class="fi"><img src="assets/images/chakraveer.jpg"></div><div class="fn">Chakraveer</div></div>
+      <div class="fc"><div class="fi"><img src="assets/images/fantasy.jpg"></div><div class="fn">Propycyp</div></div>
+      <div class="fc"><div class="fi"><img src="assets/images/mock_bottle.png"></div><div class="fn">PLANTIVO</div></div>
+      <div class="fc"><div class="fi"><img src="assets/images/garuda.webp"></div><div class="fn">AZOZOLE</div></div>
+      <div class="fc"><div class="fi"><img src="assets/images/fipronil.jpg"></div><div class="fn">DOCTER 505</div></div>
+    </div>
+    <div class="nab"><span class="material-icons">new_releases</span><div><h4>NEW ARRIVALS ARE HERE!</h4><p>BE THE FIRST TO STOCK UP!</p></div></div>
+    <div class="pg">
+      <div class="pc"><div class="pi"><img src="assets/images/mock_bottle.png"><span class="material-icons ht">favorite_border</span><div class="qty">250 gm x 20 pc</div></div><div class="pd"><div class="pn">Plantivo | Tebuconazole 50%</div><div class="mrp">₹39600</div><div class="pr-r"><span class="pr">₹18160</span><span class="ds">54% OFF</span></div><button class="ab">ADD</button><div class="opts">3 options</div></div></div>
+      <div class="pc"><div class="pi"><img src="assets/images/garuda.webp"><span class="material-icons ht">favorite_border</span><div class="qty">250 ML x 40 pc</div></div><div class="pd"><div class="pn">ETHER 39 | Ethephon 39% SL</div><div class="mrp">₹19600</div><div class="pr-r"><span class="pr">₹10560</span><span class="ds">46% OFF</span></div><button class="ab">ADD</button><div class="opts">2 options</div></div></div>
+    </div>
+    <div style="height:24px"></div>
+  </div>
+  <div class="fab"><span class="material-icons">menu</span></div>
+  <div class="bnav"><div class="ni on"><span class="material-icons">home</span>Home</div><div class="ni"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div></div>
+
+<!-- CATEGORY -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot b"></div>Category</div>
+<div class="ph">
+  <div class="ctb"><div class="av"><span class="material-icons">person</span></div><div class="icons"><span class="material-icons">search</span><span class="material-icons">shopping_cart</span><span class="material-icons">phone</span></div></div>
+  <div class="scroll" style="background:#fff">
+    <div class="ct-t">Categories</div>
+    <div class="cc"><div class="ci"><img src="assets/images/chakraveer_ins.png"></div><div class="cn">Pesticide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="ci"><img src="assets/images/humic_acid.webp"></div><div class="cn">Fertilizer</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="ci"><img src="assets/images/garuda.webp"></div><div class="cn">Fungicide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="ci"><img src="assets/images/emazar.png"></div><div class="cn">Herbicide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="ci"><img src="assets/images/fantasy.jpg"></div><div class="cn">Combos</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="ct-t">Catalogues</div>
+    <div class="ct-st">Chemicals</div>
+    <div class="clr"><div class="ct"><img src="assets/images/chakraveer_ins.png"></div><div class="cname">Chemical Insecticides Catalo...</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="assets/images/garuda.webp"></div><div class="cname">Chemical Fungicide Catalogue</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="assets/images/emazar.png"></div><div class="cname">Herbicide Catalogue</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="ct-st" style="padding-top:10px">Bio</div>
+    <div class="clr"><div class="ct"><img src="assets/images/fantasy.jpg"></div><div class="cname">Bio Product Catalogue</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni"><span class="material-icons-outlined">home</span>Home</div><div class="ni on"><span class="material-icons">grid_view</span>Category</div><div class="ni"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div></div>
+
+<!-- VIP -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot p"></div>VIP</div>
+<div class="ph">
+  <div class="vbg">
+    <div class="vh"><div class="tr"><span class="material-icons">diamond</span><h2>Katyayani VIP Club</h2></div><div><span class="material-icons crn">emoji_events</span></div><div class="bb"><span class="material-icons">shield</span>Bronze</div><div class="un">vaibhaw</div></div>
+    <div class="vs"><span class="material-icons">monetization_on</span><div class="vsi"><h3>25</h3><span>Krishi Coins</span></div><span class="material-icons arr">chevron_right</span></div>
+    <div class="vs" style="margin-top:8px"><span class="material-icons-outlined">currency_rupee</span><div class="vsi"><h3>₹ 3201</h3><span>Orders in last 90 days</span></div><span class="material-icons arr">chevron_right</span></div>
+    <div class="tiers"><div class="tl"></div>
+      <div class="tier"><div class="hex a"><span class="material-icons" style="color:#fff">hexagon</span></div><div class="tn" style="color:#fff;font-weight:800">Bronze</div></div>
+      <div class="tier"><div class="hex i"><span class="material-icons" style="color:#C0C0C0">hexagon</span></div><div class="tn">Silver</div><div class="ta">₹10000</div></div>
+      <div class="tier"><div class="hex i"><span class="material-icons" style="color:#FFD700">hexagon</span></div><div class="tn">Gold</div><div class="ta">₹100000</div></div>
+      <div class="tier"><div class="hex i"><span class="material-icons" style="color:#E5E4E2">hexagon</span></div><div class="tn">Platinum</div><div class="ta">₹400000</div></div>
+      <div class="tier"><div class="hex i"><span class="material-icons" style="color:#607D8B">hexagon</span></div><div class="tn">Diamond</div><div class="ta">₹700000</div></div>
+    </div>
+    <div class="vi">Your membership is based on how much you spent in the last 90 days.</div>
+    <div class="bt"><span class="material-icons">star</span> Benefits <span class="material-icons">star</span></div>
+    <div class="bfc"><div class="bh"><h4>Bronze</h4><div class="hr"><span class="material-icons">location_on</span> You are here</div></div><div class="bi"><span class="material-icons">monetization_on</span><span>Unlock Silver membership and start earning Partner Coins!</span></div></div>
+    <div class="bfc" style="opacity:.65"><div class="bh"><h4>Silver</h4><div class="lk"><span class="material-icons">lock</span> Locked</div></div><div class="bi"><span class="material-icons">monetization_on</span><span>Earn 25 Partner Coins on every ₹10,000 spent</span></div></div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni"><span class="material-icons-outlined">home</span>Home</div><div class="ni"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni on"><span class="material-icons">star</span>VIP</div><div class="ni"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div></div>
+
+<!-- PROFILE -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot o"></div>Profile</div>
+<div class="ph">
+  <div class="pt"><div class="av"><span class="material-icons">person</span></div><div class="pi"><span class="material-icons">phone</span></div></div>
+  <div style="background:linear-gradient(135deg,var(--green),var(--gl));padding:0 14px 14px"><div class="pbanner"><span>Complete your profile to access exclusive app features!</span><button class="btn">Complete Now</button></div></div>
+  <div class="pge"></div>
+  <div class="scroll" style="background:#fff">
+    <div class="pcard"><div class="ed"><span class="material-icons">edit</span></div><div class="coins"><span class="material-icons">monetization_on</span><span>25</span></div><h3>VAIBHAW VISHAL</h3><div class="ir"><span class="material-icons">phone_android</span><span>8720055676</span></div><div class="ir"><span class="material-icons">assignment</span><span>23JYOPS2031C1Z1</span></div><div class="ir"><span class="material-icons">location_on</span><span>shshjzhs hshshsns</span></div><div class="ir"><span class="material-icons">flag</span><span>India</span></div></div>
+    <div class="pp"><div class="pph"><span>Progress</span><span>46.15 %</span></div><div class="bar"><div class="fill"></div></div></div>
+    <div class="pm">
+      <div class="pmi"><span class="material-icons-outlined">menu_book</span><span>Address Book</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">shopping_bag</span><span>Orders</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">shopping_cart</span><span>Cart</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">verified_user</span><span>Request Pesticide Certificate</span><span class="material-icons lock">lock_outline</span></div>
+      <div class="pmi"><span class="material-icons-outlined">account_balance_wallet</span><span>My Wallet</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">monetization_on</span><span>My Coins</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">card_giftcard</span><span>Refer and Earn</span><span class="material-icons arr">chevron_right</span></div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni"><span class="material-icons-outlined">home</span>Home</div><div class="ni"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni on"><span class="material-icons">person</span>Profile</div></div>
+</div></div>
+
+</div><!-- screen-row -->
+</div><!-- sec-main -->
+
+<!-- EXTRA SCREENS -->
+<div id="sec-extra" style="display:none">
+<div class="section-label">Additional Screens</div>
+<div class="screen-row">
+
+<!-- SEARCH -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot g"></div>Search</div>
+<div class="ph">
+  <div class="topbar"><div class="topbar-row1">
+    <div class="avatar"><span class="material-icons">person</span></div>
+    <div class="welcome"><div class="w1">Welcome! vaibhaw</div><div class="badges"><div class="bp br"><span class="material-icons">shield</span>Bronze</div><div class="bp co"><span class="material-icons">monetization_on</span>25</div></div></div>
+    <div class="topicons"><div class="bell"><span class="material-icons-outlined">notifications</span></div><div class="cw"><span class="material-icons-outlined" style="color:#fff">shopping_cart</span><div class="bc">3</div></div></div>
+  </div></div>
+  <div class="scroll" style="background:#fff">
+    <!-- Active search bar -->
+    <div class="search-input" style="margin-top:12px">
+      <div class="si-head">
+        <span class="material-icons">search</span>
+        <input type="text" placeholder="Search products..." value="Humic">
+        <span class="material-icons clear">close</span>
+      </div>
+    </div>
+    <div class="recent-title">Recent Searches</div>
+    <div class="recent-item"><span class="material-icons">history</span><span>NPK 19:19:19</span><span class="material-icons arrow">north_west</span></div>
+    <div class="recent-item"><span class="material-icons">history</span><span>Imidacloprid</span><span class="material-icons arrow">north_west</span></div>
+    <div class="recent-item"><span class="material-icons">history</span><span>Humic Acid</span><span class="material-icons arrow">north_west</span></div>
+    <div class="recent-item"><span class="material-icons">history</span><span>Chakraveer</span><span class="material-icons arrow">north_west</span></div>
+    <div class="recent-item"><span class="material-icons">history</span><span>Fungicide combo</span><span class="material-icons arrow">north_west</span></div>
+    <div class="recent-title">Trending</div>
+    <div style="padding:0 14px;display:flex;flex-wrap:wrap">
+      <div class="trending-tag"><span class="material-icons" style="font-size:14px;color:var(--red)">local_fire_department</span>Plantivo</div>
+      <div class="trending-tag"><span class="material-icons" style="font-size:14px;color:var(--red)">local_fire_department</span>NPK Fertilizer</div>
+      <div class="trending-tag"><span class="material-icons" style="font-size:14px;color:var(--red)">local_fire_department</span>Carbendazim</div>
+      <div class="trending-tag"><span class="material-icons" style="font-size:14px;color:var(--red)">local_fire_department</span>Neem Oil</div>
+      <div class="trending-tag"><span class="material-icons" style="font-size:14px;color:var(--red)">local_fire_department</span>Humic Acid 98</div>
+      <div class="trending-tag"><span class="material-icons" style="font-size:14px;color:var(--red)">local_fire_department</span>Bio Products</div>
+    </div>
+    <div class="recent-title">Popular Categories</div>
+    <div class="cr" style="padding:0 14px 12px">
+      <div class="ci-w"><div class="ci-b" style="background:#ffebee;border-color:#ffcdd2"><span class="material-icons" style="color:#e53935">bug_report</span></div><span>Pesticide</span></div>
+      <div class="ci-w"><div class="ci-b" style="background:#e3f2fd;border-color:#bbdefb"><span class="material-icons" style="color:#1e88e5">grass</span></div><span>Fertilizer</span></div>
+      <div class="ci-w"><div class="ci-b" style="background:#f3e5f5;border-color:#e1bee7"><span class="material-icons" style="color:#8e24aa">eco</span></div><span>Fungicide</span></div>
+      <div class="ci-w"><div class="ci-b" style="background:#fff3e0;border-color:#ffe0b2"><span class="material-icons" style="color:#f57c00">spa</span></div><span>Herbicide</span></div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni on"><span class="material-icons">home</span>Home</div><div class="ni"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div></div>
+
+<!-- CART -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot b"></div>Cart (3 items)</div>
+<div class="ph">
+  <div class="topbar"><div class="topbar-row1">
+    <div class="avatar"><span class="material-icons">person</span></div>
+    <div class="welcome"><div class="w1" style="font-size:17px;font-weight:800">My Cart</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">3 items</div></div>
+    <div class="topicons"><div class="bell"><span class="material-icons-outlined">notifications</span></div></div>
+  </div></div>
+  <div class="scroll" style="background:#fff">
+    <div style="height:12px"></div>
+    <!-- Cart Items -->
+    <div class="cart-item">
+      <div class="ci-img"><img src="assets/images/mock_bottle.png"></div>
+      <div class="ci-info">
+        <div class="ci-name">Plantivo | Tebuconazole 50% + Trifloxystrobin 25%</div>
+        <div class="ci-qty">250 gm x 20 pc</div>
+        <div><span class="ci-mrp">₹39,600</span></div>
+        <div class="ci-price">₹18,160</div>
+      </div>
+      <div class="ci-actions">
+        <span class="material-icons del">delete_outline</span>
+        <div class="qty-ctrl"><button>-</button><div class="q">1</div><button>+</button></div>
+      </div>
+    </div>
+    <div class="cart-item">
+      <div class="ci-img"><img src="assets/images/garuda.webp"></div>
+      <div class="ci-info">
+        <div class="ci-name">ETHER 39 | Ethephon 39% SL Insecticide</div>
+        <div class="ci-qty">250 ML x 40 pc</div>
+        <div><span class="ci-mrp">₹19,600</span></div>
+        <div class="ci-price">₹10,560</div>
+      </div>
+      <div class="ci-actions">
+        <span class="material-icons del">delete_outline</span>
+        <div class="qty-ctrl"><button>-</button><div class="q">2</div><button>+</button></div>
+      </div>
+    </div>
+    <div class="cart-item">
+      <div class="ci-img"><img src="assets/images/humic_acid.webp"></div>
+      <div class="ci-info">
+        <div class="ci-name">Humic Acid + Fulvic Acid 98 Granules</div>
+        <div class="ci-qty">1 kg x 10 pc</div>
+        <div><span class="ci-mrp">₹7,000</span></div>
+        <div class="ci-price">₹4,900</div>
+      </div>
+      <div class="ci-actions">
+        <span class="material-icons del">delete_outline</span>
+        <div class="qty-ctrl"><button>-</button><div class="q">1</div><button>+</button></div>
+      </div>
+    </div>
+
+    <!-- Coupon -->
+    <div style="margin:12px 14px;padding:12px 14px;background:var(--card);border:1.5px dashed var(--green);border-radius:var(--rs);display:flex;align-items:center;gap:10px;cursor:pointer">
+      <span class="material-icons" style="color:var(--green);font-size:22px">local_offer</span>
+      <span style="flex:1;font-size:13px;font-weight:600;color:var(--green)">Apply Coupon Code</span>
+      <span class="material-icons" style="color:var(--t3);font-size:20px">chevron_right</span>
+    </div>
+
+    <!-- Summary -->
+    <div class="cart-summary">
+      <div class="cs-row"><span>Subtotal (4 items)</span><span>₹44,180</span></div>
+      <div class="cs-row"><span>Delivery</span><span class="green">FREE</span></div>
+      <div class="cs-row"><span>Discount</span><span class="green">- ₹2,200</span></div>
+      <div class="cs-row total"><span>Total</span><span>₹41,980</span></div>
+    </div>
+
+    <div class="checkout-btn">Proceed to Checkout</div>
+
+    <!-- You may also like -->
+    <div style="padding:16px 14px 8px;font-size:14px;font-weight:800;color:var(--t1)">You may also like</div>
+    <div style="display:flex;gap:10px;padding:0 14px 16px;overflow-x:auto">
+      <div class="pc" style="min-width:150px;max-width:150px;flex-shrink:0"><div class="pi" style="height:90px"><img src="assets/images/fipronil.jpg"><span class="material-icons ht">favorite_border</span><div class="qty">500 ml x 12 pc</div></div><div class="pd"><div class="pn">Fipronil 5% SC</div><div class="pr-r"><span class="pr">₹3,780</span><span class="ds">30% OFF</span></div><button class="ab">ADD</button></div></div>
+      <div class="pc" style="min-width:150px;max-width:150px;flex-shrink:0"><div class="pi" style="height:90px"><img src="assets/images/chakraveer.jpg"><span class="material-icons ht">favorite_border</span><div class="qty">100 gm x 40 pc</div></div><div class="pd"><div class="pn">Chakraveer Insecticide</div><div class="pr-r"><span class="pr">₹5,600</span><span class="ds">25% OFF</span></div><button class="ab">ADD</button></div></div>
+    </div>
+  </div>
+  <div class="bnav"><div class="ni"><span class="material-icons-outlined">home</span>Home</div><div class="ni"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div></div>
+
+<!-- PRODUCT DETAIL -->
+<div class="screen-wrap">
+<div class="screen-name"><div class="dot p"></div>Product Detail</div>
+<div class="ph">
+  <div class="scroll" style="background:#fff">
+    <!-- Gallery -->
+    <div class="pd-gallery">
+      <div class="back-btn"><span class="material-icons">arrow_back</span></div>
+      <div class="fav-btn"><span class="material-icons">favorite_border</span></div>
+      <div class="share-btn"><span class="material-icons">share</span></div>
+      <img src="assets/images/humic_acid.webp">
+      <div class="img-dots"><div class="d on"></div><div class="d"></div><div class="d"></div><div class="d"></div></div>
+    </div>
+
+    <!-- Body -->
+    <div class="pd-body">
+      <div class="tag-row">
+        <div class="tag pest-t">Fertilizer</div>
+        <div class="tag disc-t">30% OFF</div>
+      </div>
+      <div class="pd-name">Katyayani Activated Humic Acid + Fulvic Acid 98 Granules</div>
+      <div class="pd-brand">By Katyayani Organics</div>
+      <div class="pd-price-row">
+        <span class="big-pr">₹4,900</span>
+        <span class="old-pr">₹7,000</span>
+        <span class="disc-badge">30% OFF</span>
+      </div>
+      <div class="pd-pack">Pack: 1 kg x 10 pc</div>
+
+      <div class="variant-title">Select Variant</div>
+      <div class="variant-row">
+        <div class="variant-chip sel">1 kg x 10 pc — ₹4,900</div>
+        <div class="variant-chip">500 gm x 20 pc — ₹5,200</div>
+        <div class="variant-chip">250 gm x 40 pc — ₹5,800</div>
+      </div>
+
+      <div class="pd-add-cart">Add to Cart</div>
+
+      <div class="pd-specs">
+        <div class="spec-title">Product Details</div>
+        <div class="spec-row"><div class="sk">Brand</div><div class="sv">Katyayani</div></div>
+        <div class="spec-row"><div class="sk">Category</div><div class="sv">Fertilizer</div></div>
+        <div class="spec-row"><div class="sk">Active Ingredient</div><div class="sv">Humic Acid + Fulvic Acid</div></div>
+        <div class="spec-row"><div class="sk">Concentration</div><div class="sv">98%</div></div>
+        <div class="spec-row"><div class="sk">Form</div><div class="sv">Granules</div></div>
+        <div class="spec-row"><div class="sk">Application</div><div class="sv">All types of Plants & Home Garden</div></div>
+        <div class="spec-row"><div class="sk">Shelf Life</div><div class="sv">3 Years</div></div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni"><span class="material-icons-outlined">home</span>Home</div><div class="ni"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div></div>
+
+</div><!-- screen-row -->
+</div><!-- sec-extra -->
+
+</div><!-- canvas -->
+
+<script>
+let zoom = 100;
+function zoomIn(){zoom=Math.min(zoom+10,150);applyZoom()}
+function zoomOut(){zoom=Math.max(zoom-10,50);applyZoom()}
+function applyZoom(){document.getElementById('canvas').style.transform='scale('+zoom/100+')';document.getElementById('canvas').style.transformOrigin='top left';document.getElementById('zp').textContent=zoom+'%'}
+function showSection(s){
+  document.getElementById('sec-main').style.display=s==='main'?'block':'none';
+  document.getElementById('sec-extra').style.display=s==='extra'?'block':'none';
+  document.querySelectorAll('.toolbar .tab').forEach(t=>t.classList.remove('on'));
+  event.target.classList.add('on');
+}
+// Layer panel toggle
+document.querySelectorAll('.lp-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    document.querySelectorAll('.lp-item').forEach(i=>i.classList.remove('on'));
+    item.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

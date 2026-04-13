@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Katyayani Partner App - Interactive Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined|Material+Icons" rel="stylesheet">
+<style>
+:root{--g:#1B6B2A;--gd:#145222;--gl:#2E7D32;--gg:rgba(27,107,42,.15);--gold:#FFD700;--bronze:#CD7F32;--red:#E53935;--bg:#f7f6f2;--card:#fff;--bdr:#eaeaea;--t1:#1a1a1a;--t2:#555;--t3:#999;--r:16px;--rs:12px;--rx:8px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+
+/* Phone */
+.phone{width:100vw;max-width:420px;height:100vh;max-height:900px;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media(min-width:500px){.phone{border-radius:36px;box-shadow:0 0 0 2px #111,0 0 0 4px #2a2a2a,0 20px 60px rgba(0,0,0,.4);max-height:850px}}
+
+/* Pages */
+.page{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;opacity:0;pointer-events:none;z-index:1;background:var(--bg)}
+.page.active{opacity:1;pointer-events:all;z-index:2;transform:translateX(0)!important}
+.page.slide-right{transform:translateX(100%)}
+.page.slide-left{transform:translateX(-100%)}
+
+/* Shared top bar */
+.tb{background:linear-gradient(135deg,var(--g),var(--gl));padding:max(env(safe-area-inset-top),10px) 14px 10px;flex-shrink:0}
+.tb .r1{display:flex;align-items:center;gap:10px}
+.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#f0d48a,#d4a56a);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.av .material-icons{font-size:24px;color:#7a4a1a}
+.wel{flex:1}.wel .w1{font-size:14px;font-weight:700;color:#fff}
+.bgs{display:flex;gap:5px;margin-top:4px}
+.bg{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:16px;font-size:10px;font-weight:700;color:#fff}
+.bg.br{background:rgba(205,127,50,.25)}.bg.br .material-icons{font-size:12px;color:var(--bronze)}
+.bg.co{background:rgba(255,215,0,.2)}.bg.co .material-icons{font-size:12px;color:var(--gold)}
+.ti{display:flex;align-items:center;gap:6px}
+.ti .bell .material-icons-outlined{font-size:22px;color:var(--gold)}
+.ti .cw{position:relative;cursor:pointer}.ti .cw .material-icons-outlined{font-size:22px;color:#fff}
+.ti .bc{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:7px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--g)}
+
+/* Search bar */
+.sb{margin:8px 12px;padding:10px 14px;background:var(--card);border-radius:24px;display:flex;align-items:center;gap:8px;border:1px solid var(--bdr);cursor:pointer}
+.sb .material-icons{font-size:20px;color:var(--g)}.sb span{flex:1;font-size:13px;color:#bbb;font-weight:500}.sb .mic{font-size:20px;color:var(--t3)}
+
+/* Scroll */
+.sc{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.sc::-webkit-scrollbar{width:0}
+
+/* Banner */
+.bnr{margin:6px 12px;border-radius:var(--r);overflow:hidden;height:150px;box-shadow:0 4px 16px rgba(27,107,42,.2)}
+.bnr img{width:100%;height:100%;object-fit:cover}
+.dots{display:flex;justify-content:center;gap:4px;padding:6px 0}
+.dot{width:6px;height:6px;border-radius:50%;background:#ddd}.dot.on{background:var(--g);width:16px;border-radius:3px}
+
+/* Categories */
+.csec{padding:14px 12px 0}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ch h3{font-size:16px;font-weight:800;color:var(--t1)}.ch a{font-size:11px;font-weight:700;color:var(--g);text-decoration:none;padding:3px 8px;border-radius:16px;background:var(--gg)}
+.cr{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}.cr::-webkit-scrollbar{display:none}
+.ci{display:flex;flex-direction:column;align-items:center;min-width:64px;gap:4px;cursor:pointer}
+.ci .ib{width:50px;height:50px;border-radius:14px;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid var(--bdr)}
+.ci .ib .material-icons{font-size:24px}.ci span{font-size:9px;font-weight:600;color:var(--t2);text-align:center}
+
+/* Strip */
+.strip{margin:10px 12px;border-radius:var(--rs);overflow:hidden;height:48px;box-shadow:0 3px 12px rgba(27,107,42,.12)}.strip img{width:100%;height:100%;object-fit:cover}
+
+/* Featured grid */
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 12px}
+.fc{background:var(--card);border-radius:var(--rs);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--bdr);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fc:active{transform:scale(.96)}
+.fc .fi{height:68px;display:flex;align-items:center;justify-content:center;background:#faf9f6;overflow:hidden}.fc .fi img{width:100%;height:100%;object-fit:contain;padding:5px}
+.fc .fn{padding:4px 5px 5px;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;font-size:7.5px;font-weight:700;text-align:center}
+
+/* New arrivals */
+.nab{margin:8px 12px;border-radius:var(--rs);background:linear-gradient(135deg,#0d3d15,var(--g));padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 3px 12px rgba(27,107,42,.15)}
+.nab .material-icons{font-size:24px;color:var(--gold)}.nab h4{font-size:12px;font-weight:800;color:#fff}.nab p{font-size:9px;color:rgba(255,255,255,.7)}
+
+/* Product card */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px 12px}
+.pc{background:var(--card);border-radius:var(--rs);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--bdr);cursor:pointer}
+.pc:active{transform:scale(.97)}
+.pc .pi{height:105px;background:#faf9f6;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pc .pi img{width:100%;height:100%;object-fit:contain;padding:6px}
+.pc .pi .ht{position:absolute;top:6px;right:6px;font-size:16px;color:#ddd;background:var(--card);border-radius:50%;padding:3px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.pc .pi .qty{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(90deg,var(--g),var(--gl));color:#fff;font-size:8px;font-weight:700;text-align:center;padding:3px 0}
+.pc .pd{padding:6px 8px 8px}
+.pc .pd .pn{font-size:10px;font-weight:600;color:var(--t1);line-height:1.3;height:26px;overflow:hidden}
+.pc .pd .mrp{font-size:9px;color:var(--t3);text-decoration:line-through;margin-top:3px}
+.pc .pd .prr{display:flex;align-items:center;gap:4px;margin-top:1px}
+.pc .pd .prr .pr{font-size:13px;font-weight:800;color:var(--t1)}
+.pc .pd .prr .ds{font-size:8px;font-weight:800;color:var(--red);background:rgba(229,57,53,.08);padding:1px 5px;border-radius:3px}
+.pc .pd .ab{margin-top:6px;width:100%;padding:6px 0;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border:none;border-radius:var(--rx);font-size:11px;font-weight:800;cursor:pointer}
+.pc .pd .opts{font-size:8px;color:var(--t3);text-align:center;margin-top:2px}
+
+/* FAB */
+.fab{position:absolute;bottom:64px;right:12px;z-index:10;width:44px;height:44px;border-radius:12px;background:var(--card);border:2px solid var(--g);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(27,107,42,.2);cursor:pointer}
+.fab .material-icons{font-size:22px;color:var(--g)}
+
+/* Bottom nav */
+.bnav{display:flex;align-items:center;justify-content:space-around;height:56px;flex-shrink:0;background:linear-gradient(135deg,var(--g),var(--gd));padding-bottom:max(env(safe-area-inset-bottom),0px)}
+.bnav .ni{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:9px;color:rgba(255,255,255,.45);cursor:pointer;width:56px;position:relative;padding:4px 0}
+.bnav .ni.on{color:#fff}
+.bnav .ni.on::before{content:'';position:absolute;top:0;width:20px;height:2.5px;border-radius:0 0 2px 2px;background:var(--gold)}
+.bnav .ni .material-icons,.bnav .ni .material-icons-outlined{font-size:21px}
+
+/* ===== CATEGORY PAGE ===== */
+.ctb{background:linear-gradient(135deg,var(--g),var(--gl));padding:max(env(safe-area-inset-top),10px) 14px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ctb .icons{display:flex;gap:12px}.ctb .icons .material-icons{font-size:22px;color:#fff;cursor:pointer}
+.ctt{padding:16px 12px 6px;font-size:18px;font-weight:900;color:var(--g)}
+.cst{padding:2px 12px 6px;font-size:12px;font-weight:700;color:var(--g)}
+.cc{margin:0 12px 8px;background:var(--card);border-radius:var(--rs);padding:10px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);border:1px solid var(--bdr);cursor:pointer}
+.cc:active{background:#f5f5f0}
+.cc .cimg{width:48px;height:48px;border-radius:12px;background:#f5f5f0;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--bdr)}
+.cc .cimg img{width:100%;height:100%;object-fit:cover}
+.cc .cn{flex:1;font-size:14px;font-weight:700;color:var(--t1)}.cc .arr{font-size:20px;color:var(--t3)}
+.clr{margin:0 12px 6px;background:var(--card);border-radius:var(--rx);padding:8px 10px;display:flex;align-items:center;gap:8px;border:1px solid var(--bdr);cursor:pointer}
+.clr .ct{width:34px;height:34px;border-radius:8px;background:#f5f5f0;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--bdr)}.clr .ct img{width:100%;height:100%;object-fit:cover}
+.clr .cn{flex:1;font-size:12px;font-weight:600;color:var(--t1)}
+.clr .ca{display:flex;gap:6px}.clr .ca .material-icons-outlined{font-size:20px}.clr .ca .vw{color:var(--g)}.clr .ca .dl{color:#FF9800}
+
+/* ===== VIP ===== */
+.vbg{flex:1;overflow-y:auto;padding:max(env(safe-area-inset-top),10px) 14px 14px;background:linear-gradient(180deg,var(--g),#0f4a1a)}
+.vbg::-webkit-scrollbar{width:0}
+.vh{text-align:center}.vh .tr{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:12px}.vh .tr .material-icons{font-size:20px;color:rgba(255,255,255,.5)}.vh .tr h2{font-size:16px;font-weight:800;color:#fff}
+.vh .crn{font-size:52px;color:var(--gold)}.vh .bb{display:inline-flex;align-items:center;gap:4px;background:rgba(205,127,50,.3);padding:4px 14px;border-radius:16px;font-size:11px;font-weight:700;color:#fff}.vh .bb .material-icons{font-size:14px;color:var(--bronze)}.vh .un{font-size:18px;font-weight:900;color:#fff;margin-top:4px}
+.vs{margin-top:10px;background:rgba(255,255,255,.08);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.vs .material-icons,.vs .material-icons-outlined{font-size:26px;color:var(--gold)}.vs .vsi{flex:1}.vs .vsi h3{font-size:20px;font-weight:900;color:#fff}.vs .vsi span{font-size:10px;color:rgba(255,255,255,.55)}.vs .arr{font-size:18px;color:rgba(255,255,255,.3)}
+.tiers{display:flex;justify-content:space-between;margin:18px 0;position:relative}
+.tier{display:flex;flex-direction:column;align-items:center;gap:3px;z-index:1}.tier .hex{width:34px;height:38px;border-radius:6px;display:flex;align-items:center;justify-content:center}.tier .hex.a{background:var(--bronze)}.tier .hex.i{background:rgba(255,255,255,.1)}.tier .hex .material-icons{font-size:20px}.tier .tn{font-size:8px;font-weight:700;color:rgba(255,255,255,.55)}.tier .ta{font-size:7px;color:rgba(255,255,255,.3)}
+.tl{position:absolute;top:19px;left:26px;right:26px;height:2px;background:rgba(255,255,255,.08)}
+.vi{background:rgba(255,255,255,.06);border-radius:var(--rs);padding:12px;font-size:11px;color:rgba(255,255,255,.75);text-align:center;margin:8px 0}
+.bt{text-align:center;margin:14px 0 10px;font-size:16px;font-weight:800;color:#fff}.bt .material-icons{font-size:16px;color:var(--gold);vertical-align:middle}
+.bfc{background:rgba(255,255,255,.06);backdrop-filter:blur(6px);border-radius:var(--rs);padding:14px;margin-bottom:8px;border:1.5px solid rgba(0,200,200,.2)}
+.bfc .bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.bfc .bh h4{font-size:15px;font-weight:800;color:#4DD0E1}
+.bfc .bh .hr{font-size:9px;font-weight:700;color:#fff;background:rgba(77,208,225,.15);padding:3px 8px;border-radius:10px;display:flex;align-items:center;gap:2px}.bfc .bh .hr .material-icons{font-size:11px;color:#4DD0E1}
+.bfc .bh .lk{font-size:10px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:2px}.bfc .bh .lk .material-icons{font-size:13px}
+.bfc .bi{display:flex;align-items:flex-start;gap:8px;margin-top:6px}.bfc .bi .material-icons{font-size:16px;color:var(--gold);flex-shrink:0}.bfc .bi span{font-size:11px;color:rgba(255,255,255,.75)}
+
+/* ===== PROFILE ===== */
+.pt{background:linear-gradient(135deg,var(--g),var(--gl));padding:max(env(safe-area-inset-top),10px) 14px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.pt .pi{background:rgba(255,255,255,.15);border-radius:8px;padding:7px;cursor:pointer}.pt .pi .material-icons{font-size:18px;color:#fff}
+.pbn{margin:0 12px;padding:8px 12px;background:rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;gap:8px;margin-top:8px}
+.pbn span{flex:1;font-size:11px;color:rgba(255,255,255,.85)}.pbn .btn{background:#fff;color:var(--g);border:none;padding:6px 12px;border-radius:var(--rx);font-size:10px;font-weight:700;cursor:pointer}
+.pge{height:14px;background:linear-gradient(135deg,var(--g),var(--gl));flex-shrink:0}
+.pcard{margin:10px 12px 0;background:linear-gradient(135deg,var(--g),var(--gd));border-radius:var(--r);padding:14px;position:relative;box-shadow:0 4px 16px rgba(27,107,42,.2)}
+.pcard .ed{position:absolute;top:10px;right:10px}.pcard .ed .material-icons{font-size:16px;color:rgba(255,255,255,.5)}
+.pcard .coins{position:absolute;bottom:10px;right:12px;display:flex;align-items:center;gap:3px}.pcard .coins .material-icons{font-size:16px;color:var(--gold)}.pcard .coins span{font-size:15px;font-weight:800;color:#fff}
+.pcard h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:6px}.pcard .ir{display:flex;align-items:center;gap:6px;margin-top:3px}.pcard .ir .material-icons{font-size:13px;color:rgba(255,255,255,.4)}.pcard .ir span{font-size:11px;color:rgba(255,255,255,.65)}
+.pp{padding:14px 12px 10px}.pp .pph{display:flex;justify-content:space-between;margin-bottom:6px}.pp .pph span:first-child{font-size:13px;font-weight:600;color:var(--t3)}.pp .pph span:last-child{font-size:13px;font-weight:800;color:var(--g)}
+.pp .bar{height:7px;background:#eee;border-radius:4px;overflow:hidden}.pp .bar .fill{height:100%;width:46%;background:linear-gradient(90deg,var(--g),var(--gl));border-radius:4px}
+.pm{padding:0 12px}.pm .pmi{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0;cursor:pointer}
+.pm .pmi:active{background:#f8f8f5}
+.pm .pmi .material-icons-outlined{font-size:20px;color:var(--g)}.pm .pmi span{flex:1;font-size:13px;font-weight:600;color:var(--t1)}.pm .pmi .arr{font-size:18px;color:#ddd}.pm .pmi .lock{font-size:16px;color:var(--t3)}
+
+/* ===== SEARCH ===== */
+.si{margin:10px 12px;background:var(--card);border-radius:var(--rs);overflow:hidden;border:2px solid var(--g);box-shadow:0 4px 16px var(--gg)}
+.si .sh{padding:10px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bdr)}
+.si .sh .material-icons{font-size:18px;color:var(--g)}.si .sh input{border:none;outline:none;flex:1;font-size:13px;font-family:inherit;font-weight:500;color:var(--t1);background:transparent}.si .sh input::placeholder{color:#ccc}
+.si .sh .cl{font-size:18px;color:var(--t3);cursor:pointer}
+.rt{padding:14px 12px 6px;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1px}
+.ri{padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer}.ri:active{background:#f5f5f0}.ri .material-icons{font-size:16px;color:var(--t3)}.ri span{font-size:12px;color:var(--t1);font-weight:500;flex:1}.ri .aw{font-size:14px;color:#ddd}
+.tt{display:inline-flex;align-items:center;gap:3px;padding:5px 12px;border-radius:16px;background:var(--card);border:1px solid var(--bdr);font-size:10px;font-weight:600;color:var(--t2);margin:2px;cursor:pointer}
+.tt:active{border-color:var(--g);color:var(--g);background:var(--gg)}
+.tt .material-icons{font-size:12px;color:var(--red)}
+
+/* ===== CART ===== */
+.cti{margin:0 12px 8px;background:var(--card);border-radius:var(--rs);padding:10px;display:flex;gap:10px;border:1px solid var(--bdr)}
+.cti .cimg{width:72px;height:72px;border-radius:8px;background:#faf9f6;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--bdr)}.cti .cimg img{width:100%;height:100%;object-fit:contain;padding:3px}
+.cti .cinfo{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.cti .cinfo .cn{font-size:11px;font-weight:600;color:var(--t1);line-height:1.3}.cti .cinfo .cq{font-size:9px;color:var(--t3);margin-top:1px}
+.cti .cinfo .cp{font-size:14px;font-weight:800;color:var(--t1)}.cti .cinfo .cm{font-size:9px;color:var(--t3);text-decoration:line-through}
+.cti .cact{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between}
+.cti .cact .del{font-size:18px;color:var(--t3);cursor:pointer}
+.qc{display:flex;align-items:center;border:1.5px solid var(--bdr);border-radius:6px;overflow:hidden}
+.qc button{width:26px;height:26px;border:none;background:var(--card);font-size:14px;font-weight:700;color:var(--g);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qc .q{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--t1);background:#faf9f6}
+.coupon{margin:10px 12px;padding:10px 12px;background:var(--card);border:1.5px dashed var(--g);border-radius:var(--rs);display:flex;align-items:center;gap:8px;cursor:pointer}
+.coupon .material-icons{font-size:20px;color:var(--g)}.coupon span{flex:1;font-size:12px;font-weight:600;color:var(--g)}.coupon .arr{font-size:18px;color:var(--t3)}
+.cs{margin:8px 12px;background:var(--card);border-radius:var(--rs);padding:12px;border:1px solid var(--bdr)}
+.csr{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;color:var(--t2);font-weight:500}
+.csr.tot{font-size:15px;font-weight:800;color:var(--t1);border-top:1.5px dashed var(--bdr);padding-top:8px;margin-top:4px}
+.csr .grn{color:var(--g);font-weight:700}
+.cobtn{margin:10px 12px;padding:12px;text-align:center;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px var(--gg)}
+
+/* ===== PRODUCT DETAIL ===== */
+.pdg{height:200px;background:#faf9f6;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pdg img{height:85%;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.08))}
+.pdg .bk{position:absolute;top:max(env(safe-area-inset-top),8px);left:10px;width:34px;height:34px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.1);cursor:pointer;z-index:5}
+.pdg .bk .material-icons{font-size:18px;color:var(--t1)}
+.pdg .sr{position:absolute;top:max(env(safe-area-inset-top),8px);right:10px;width:34px;height:34px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.1);z-index:5}
+.pdg .sr .material-icons{font-size:18px;color:var(--t1)}
+.pdg .fv{position:absolute;top:max(env(safe-area-inset-top),8px);right:52px;width:34px;height:34px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.1);z-index:5}
+.pdg .fv .material-icons{font-size:18px;color:var(--red)}
+.pdg .idots{position:absolute;bottom:8px;display:flex;gap:3px}
+.pdg .idots .d{width:5px;height:5px;border-radius:50%;background:#ccc}.pdg .idots .d.on{background:var(--g);width:14px;border-radius:3px}
+.pdb{padding:14px 12px}
+.pdb .tgr{display:flex;gap:5px;margin-bottom:6px}
+.pdb .tg{font-size:9px;font-weight:700;padding:2px 8px;border-radius:16px}
+.pdb .tg.pt{background:rgba(27,107,42,.1);color:var(--g)}.pdb .tg.dt{background:rgba(229,57,53,.08);color:var(--red)}
+.pdb .pdn{font-size:15px;font-weight:800;color:var(--t1);line-height:1.3;margin-bottom:4px}
+.pdb .pdbr{font-size:11px;color:var(--t3);margin-bottom:10px}
+.pdb .pdpr{display:flex;align-items:baseline;gap:6px;margin-bottom:3px}
+.pdb .pdpr .bp{font-size:22px;font-weight:900;color:var(--t1)}.pdb .pdpr .op{font-size:13px;color:var(--t3);text-decoration:line-through}
+.pdb .pdpr .db{font-size:10px;font-weight:800;color:#fff;background:var(--red);padding:2px 7px;border-radius:5px}
+.pdb .pdpk{font-size:10px;color:var(--t3);margin-bottom:12px}
+.vt{font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px}
+.vr{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto}.vr::-webkit-scrollbar{display:none}
+.vc{padding:6px 12px;border-radius:var(--rx);border:1.5px solid var(--bdr);font-size:10px;font-weight:600;color:var(--t2);white-space:nowrap;cursor:pointer;background:var(--card)}
+.vc.sel{border-color:var(--g);color:var(--g);background:var(--gg)}
+.pdac{padding:12px;text-align:center;background:linear-gradient(135deg,var(--g),var(--gl));color:#fff;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px var(--gg)}
+.pds{margin-top:14px}.pds .st{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.spr{display:flex;padding:6px 0;border-bottom:1px solid #f5f5f0}.spr .sk{font-size:11px;color:var(--t3);width:110px;flex-shrink:0;font-weight:500}.spr .sv{font-size:11px;color:var(--t1);font-weight:600;flex:1}
+
+/* Page transitions */
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page.active .sc>*{animation:slideIn .3s ease-out both}
+.page.active .sc>*:nth-child(1){animation-delay:.02s}.page.active .sc>*:nth-child(2){animation-delay:.04s}
+.page.active .sc>*:nth-child(3){animation-delay:.06s}.page.active .sc>*:nth-child(4){animation-delay:.08s}
+.page.active .sc>*:nth-child(5){animation-delay:.1s}.page.active .sc>*:nth-child(6){animation-delay:.12s}
+.page.active .sc>*:nth-child(7){animation-delay:.14s}.page.active .sc>*:nth-child(8){animation-delay:.16s}
+</style>
+</head>
+<body>
+
+<div class="phone" id="app">
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+  <div class="tb"><div class="r1"><div class="av"><span class="material-icons">person</span></div><div class="wel"><div class="w1">Welcome! vaibhaw</div><div class="bgs"><div class="bg br"><span class="material-icons">shield</span>Bronze</div><div class="bg co"><span class="material-icons">monetization_on</span>25</div></div></div><div class="ti"><div class="bell"><span class="material-icons-outlined">notifications</span></div><div class="cw" onclick="go('cart')"><span class="material-icons-outlined" style="color:#fff">shopping_cart</span><div class="bc">3</div></div></div></div></div>
+  <div class="sb" onclick="go('search')"><span class="material-icons">search</span><span>Search Products...</span><span class="material-icons mic">mic</span></div>
+  <div class="sc">
+    <div class="bnr"><img src="assets/images/hero_banner.jpeg"></div>
+    <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="csec"><div class="ch"><h3>Categories</h3><a href="#" onclick="go('category');return false">View All</a></div>
+      <div class="cr">
+        <div class="ci"><div class="ib"><span class="material-icons" style="color:#2E7D32">inventory_2</span></div><span>All Products</span></div>
+        <div class="ci"><div class="ib" style="background:#ffebee"><span class="material-icons" style="color:#e53935">bug_report</span></div><span>Pesticide</span></div>
+        <div class="ci"><div class="ib" style="background:#e3f2fd"><span class="material-icons" style="color:#1e88e5">grass</span></div><span>Fertilizer</span></div>
+        <div class="ci"><div class="ib" style="background:#f3e5f5"><span class="material-icons" style="color:#8e24aa">eco</span></div><span>Fungicide</span></div>
+        <div class="ci"><div class="ib" style="background:#fff3e0"><span class="material-icons" style="color:#f57c00">spa</span></div><span>Herbicide</span></div>
+      </div>
+    </div>
+    <div class="strip"><img src="assets/images/strip_banner.jpeg"></div>
+    <div class="fg">
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/humic_acid.webp"></div><div class="fn">HUMIC + FULVIC 98</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/chakraveer.jpg"></div><div class="fn">Chakraveer</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/fantasy.jpg"></div><div class="fn">Propycyp</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/mock_bottle.png"></div><div class="fn">PLANTIVO</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/garuda.webp"></div><div class="fn">AZOZOLE</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/fipronil.jpg"></div><div class="fn">DOCTER 505</div></div>
+    </div>
+    <div class="nab"><span class="material-icons">new_releases</span><div><h4>NEW ARRIVALS ARE HERE!</h4><p>BE THE FIRST TO STOCK UP!</p></div></div>
+    <div class="pg">
+      <div class="pc" onclick="go('product')"><div class="pi"><img src="assets/images/mock_bottle.png"><span class="material-icons ht">favorite_border</span><div class="qty">250 gm x 20 pc</div></div><div class="pd"><div class="pn">Plantivo | Tebuconazole 50%</div><div class="mrp">₹39600</div><div class="prr"><span class="pr">₹18160</span><span class="ds">54% OFF</span></div><button class="ab" onclick="event.stopPropagation()">ADD</button><div class="opts">3 options</div></div></div>
+      <div class="pc" onclick="go('product')"><div class="pi"><img src="assets/images/garuda.webp"><span class="material-icons ht">favorite_border</span><div class="qty">250 ML x 40 pc</div></div><div class="pd"><div class="pn">ETHER 39 | Ethephon 39% SL</div><div class="mrp">₹19600</div><div class="prr"><span class="pr">₹10560</span><span class="ds">46% OFF</span></div><button class="ab" onclick="event.stopPropagation()">ADD</button><div class="opts">2 options</div></div></div>
+    </div>
+    <div style="height:70px"></div>
+  </div>
+  <div class="fab"><span class="material-icons">menu</span></div>
+  <div class="bnav"><div class="ni on" onclick="go('home')"><span class="material-icons">home</span>Home</div><div class="ni" onclick="go('category')"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div>
+
+<!-- ===== CATEGORY PAGE ===== -->
+<div class="page" id="page-category">
+  <div class="ctb"><div class="av"><span class="material-icons">person</span></div><div class="icons"><span class="material-icons" onclick="go('search')">search</span><span class="material-icons" onclick="go('cart')">shopping_cart</span><span class="material-icons">phone</span></div></div>
+  <div class="sc" style="background:#fff">
+    <div class="ctt">Categories</div>
+    <div class="cc"><div class="cimg"><img src="assets/images/chakraveer_ins.png"></div><div class="cn">Pesticide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="assets/images/humic_acid.webp"></div><div class="cn">Fertilizer</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="assets/images/garuda.webp"></div><div class="cn">Fungicide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="assets/images/emazar.png"></div><div class="cn">Herbicide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="assets/images/fantasy.jpg"></div><div class="cn">Combos</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="ctt">Catalogues</div><div class="cst">Chemicals</div>
+    <div class="clr"><div class="ct"><img src="assets/images/chakraveer_ins.png"></div><div class="cn">Chemical Insecticides</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="assets/images/garuda.webp"></div><div class="cn">Chemical Fungicide</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="assets/images/humic_acid.webp"></div><div class="cn">NPK Fertilizer</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="cst" style="padding-top:8px">Bio</div>
+    <div class="clr"><div class="ct"><img src="assets/images/fantasy.jpg"></div><div class="cn">Bio Product Catalogue</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni" onclick="go('home')"><span class="material-icons-outlined">home</span>Home</div><div class="ni on" onclick="go('category')"><span class="material-icons">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div>
+
+<!-- ===== VIP PAGE ===== -->
+<div class="page" id="page-vip">
+  <div class="vbg">
+    <div class="vh"><div class="tr"><span class="material-icons">diamond</span><h2>Katyayani VIP Club</h2></div><div><span class="material-icons crn">emoji_events</span></div><div class="bb"><span class="material-icons">shield</span>Bronze</div><div class="un">vaibhaw</div></div>
+    <div class="vs"><span class="material-icons">monetization_on</span><div class="vsi"><h3>25</h3><span>Krishi Coins</span></div><span class="material-icons arr">chevron_right</span></div>
+    <div class="vs" style="margin-top:6px"><span class="material-icons-outlined">currency_rupee</span><div class="vsi"><h3>₹ 3201</h3><span>Orders in last 90 days</span></div><span class="material-icons arr">chevron_right</span></div>
+    <div class="tiers"><div class="tl"></div><div class="tier"><div class="hex a"><span class="material-icons" style="color:#fff">hexagon</span></div><div class="tn" style="color:#fff">Bronze</div></div><div class="tier"><div class="hex i"><span class="material-icons" style="color:#C0C0C0">hexagon</span></div><div class="tn">Silver</div><div class="ta">₹10000</div></div><div class="tier"><div class="hex i"><span class="material-icons" style="color:#FFD700">hexagon</span></div><div class="tn">Gold</div><div class="ta">₹100000</div></div><div class="tier"><div class="hex i"><span class="material-icons" style="color:#E5E4E2">hexagon</span></div><div class="tn">Platinum</div><div class="ta">₹400000</div></div><div class="tier"><div class="hex i"><span class="material-icons" style="color:#607D8B">hexagon</span></div><div class="tn">Diamond</div><div class="ta">₹700000</div></div></div>
+    <div class="vi">Your membership is based on how much you spent in the last 90 days.</div>
+    <div class="bt"><span class="material-icons">star</span> Benefits <span class="material-icons">star</span></div>
+    <div class="bfc"><div class="bh"><h4>Bronze</h4><div class="hr"><span class="material-icons">location_on</span> You are here</div></div><div class="bi"><span class="material-icons">monetization_on</span><span>Unlock Silver membership and start earning Partner Coins!</span></div></div>
+    <div class="bfc" style="opacity:.6"><div class="bh"><h4>Silver</h4><div class="lk"><span class="material-icons">lock</span> Locked</div></div><div class="bi"><span class="material-icons">monetization_on</span><span>Earn 25 Partner Coins on every ₹10,000 spent</span></div></div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni" onclick="go('home')"><span class="material-icons-outlined">home</span>Home</div><div class="ni" onclick="go('category')"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni on" onclick="go('vip')"><span class="material-icons">star</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div>
+
+<!-- ===== PROFILE PAGE ===== -->
+<div class="page" id="page-profile">
+  <div class="pt"><div class="av"><span class="material-icons">person</span></div><div class="pi"><span class="material-icons">phone</span></div></div>
+  <div style="background:linear-gradient(135deg,var(--g),var(--gl));padding:0 12px 12px"><div class="pbn"><span>Complete your profile to access exclusive app features!</span><button class="btn">Complete Now</button></div></div>
+  <div class="pge"></div>
+  <div class="sc" style="background:#fff">
+    <div class="pcard"><div class="ed"><span class="material-icons">edit</span></div><div class="coins"><span class="material-icons">monetization_on</span><span>25</span></div><h3>VAIBHAW VISHAL</h3><div class="ir"><span class="material-icons">phone_android</span><span>8720055676</span></div><div class="ir"><span class="material-icons">assignment</span><span>23JYOPS2031C1Z1</span></div><div class="ir"><span class="material-icons">location_on</span><span>shshjzhs hshshsns</span></div><div class="ir"><span class="material-icons">flag</span><span>India</span></div></div>
+    <div class="pp"><div class="pph"><span>Progress</span><span>46.15 %</span></div><div class="bar"><div class="fill"></div></div></div>
+    <div class="pm">
+      <div class="pmi"><span class="material-icons-outlined">menu_book</span><span>Address Book</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi" onclick="go('cart')"><span class="material-icons-outlined">shopping_bag</span><span>Orders</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi" onclick="go('cart')"><span class="material-icons-outlined">shopping_cart</span><span>Cart</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">verified_user</span><span>Request Pesticide Certificate</span><span class="material-icons lock">lock_outline</span></div>
+      <div class="pmi"><span class="material-icons-outlined">account_balance_wallet</span><span>My Wallet</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">monetization_on</span><span>My Coins</span><span class="material-icons arr">chevron_right</span></div>
+      <div class="pmi"><span class="material-icons-outlined">card_giftcard</span><span>Refer and Earn</span><span class="material-icons arr">chevron_right</span></div>
+    </div><div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni" onclick="go('home')"><span class="material-icons-outlined">home</span>Home</div><div class="ni" onclick="go('category')"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni on" onclick="go('profile')"><span class="material-icons">person</span>Profile</div></div>
+</div>
+
+<!-- ===== SEARCH PAGE ===== -->
+<div class="page slide-right" id="page-search">
+  <div class="tb"><div class="r1"><div class="av"><span class="material-icons">person</span></div><div class="wel"><div class="w1">Welcome! vaibhaw</div><div class="bgs"><div class="bg br"><span class="material-icons">shield</span>Bronze</div><div class="bg co"><span class="material-icons">monetization_on</span>25</div></div></div><div class="ti"><div class="cw" onclick="go('cart')"><span class="material-icons-outlined" style="color:#fff">shopping_cart</span><div class="bc">3</div></div></div></div></div>
+  <div class="sc" style="background:#fff">
+    <div class="si"><div class="sh"><span class="material-icons">search</span><input placeholder="Search products..." autofocus><span class="material-icons cl" onclick="go('home')">close</span></div></div>
+    <div class="rt">Recent Searches</div>
+    <div class="ri"><span class="material-icons">history</span><span>NPK 19:19:19</span><span class="material-icons aw">north_west</span></div>
+    <div class="ri"><span class="material-icons">history</span><span>Imidacloprid</span><span class="material-icons aw">north_west</span></div>
+    <div class="ri"><span class="material-icons">history</span><span>Humic Acid</span><span class="material-icons aw">north_west</span></div>
+    <div class="ri"><span class="material-icons">history</span><span>Chakraveer</span><span class="material-icons aw">north_west</span></div>
+    <div class="rt">Trending</div>
+    <div style="padding:0 12px;display:flex;flex-wrap:wrap">
+      <div class="tt"><span class="material-icons">local_fire_department</span>Plantivo</div>
+      <div class="tt"><span class="material-icons">local_fire_department</span>NPK Fertilizer</div>
+      <div class="tt"><span class="material-icons">local_fire_department</span>Carbendazim</div>
+      <div class="tt"><span class="material-icons">local_fire_department</span>Neem Oil</div>
+      <div class="tt"><span class="material-icons">local_fire_department</span>Humic Acid 98</div>
+      <div class="tt"><span class="material-icons">local_fire_department</span>Bio Products</div>
+    </div>
+    <div class="rt">Popular Categories</div>
+    <div class="cr" style="padding:0 12px 12px">
+      <div class="ci"><div class="ib" style="background:#ffebee"><span class="material-icons" style="color:#e53935">bug_report</span></div><span>Pesticide</span></div>
+      <div class="ci"><div class="ib" style="background:#e3f2fd"><span class="material-icons" style="color:#1e88e5">grass</span></div><span>Fertilizer</span></div>
+      <div class="ci"><div class="ib" style="background:#f3e5f5"><span class="material-icons" style="color:#8e24aa">eco</span></div><span>Fungicide</span></div>
+    </div>
+  </div>
+  <div class="bnav"><div class="ni on" onclick="go('home')"><span class="material-icons">home</span>Home</div><div class="ni" onclick="go('category')"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div>
+
+<!-- ===== CART PAGE ===== -->
+<div class="page slide-right" id="page-cart">
+  <div class="tb"><div class="r1"><div class="av"><span class="material-icons">person</span></div><div class="wel"><div class="w1" style="font-size:16px;font-weight:800">My Cart</div><div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:1px">3 items</div></div><div class="ti"><div class="bell" onclick="go('home')" style="cursor:pointer"><span class="material-icons-outlined" style="color:#fff">arrow_back</span></div></div></div></div>
+  <div class="sc" style="background:#fff">
+    <div style="height:10px"></div>
+    <div class="cti"><div class="cimg"><img src="assets/images/mock_bottle.png"></div><div class="cinfo"><div class="cn">Plantivo | Tebuconazole 50% + Trifloxystrobin</div><div class="cq">250 gm x 20 pc</div><div class="cm">₹39,600</div><div class="cp">₹18,160</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">1</div><button>+</button></div></div></div>
+    <div class="cti"><div class="cimg"><img src="assets/images/garuda.webp"></div><div class="cinfo"><div class="cn">ETHER 39 | Ethephon 39% SL</div><div class="cq">250 ML x 40 pc</div><div class="cm">₹19,600</div><div class="cp">₹10,560</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">2</div><button>+</button></div></div></div>
+    <div class="cti"><div class="cimg"><img src="assets/images/humic_acid.webp"></div><div class="cinfo"><div class="cn">Humic Acid + Fulvic Acid 98</div><div class="cq">1 kg x 10 pc</div><div class="cm">₹7,000</div><div class="cp">₹4,900</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">1</div><button>+</button></div></div></div>
+    <div class="coupon"><span class="material-icons">local_offer</span><span>Apply Coupon Code</span><span class="material-icons arr">chevron_right</span></div>
+    <div class="cs"><div class="csr"><span>Subtotal (4 items)</span><span>₹44,180</span></div><div class="csr"><span>Delivery</span><span class="grn">FREE</span></div><div class="csr"><span>Discount</span><span class="grn">- ₹2,200</span></div><div class="csr tot"><span>Total</span><span>₹41,980</span></div></div>
+    <div class="cobtn">Proceed to Checkout</div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni" onclick="go('home')"><span class="material-icons-outlined">home</span>Home</div><div class="ni" onclick="go('category')"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div>
+
+<!-- ===== PRODUCT DETAIL PAGE ===== -->
+<div class="page slide-right" id="page-product">
+  <div class="sc" style="background:#fff">
+    <div class="pdg">
+      <div class="bk" onclick="go('home')"><span class="material-icons">arrow_back</span></div>
+      <div class="fv"><span class="material-icons">favorite_border</span></div>
+      <div class="sr"><span class="material-icons">share</span></div>
+      <img src="assets/images/humic_acid.webp">
+      <div class="idots"><div class="d on"></div><div class="d"></div><div class="d"></div><div class="d"></div></div>
+    </div>
+    <div class="pdb">
+      <div class="tgr"><div class="tg pt">Fertilizer</div><div class="tg dt">30% OFF</div></div>
+      <div class="pdn">Katyayani Activated Humic Acid + Fulvic Acid 98 Granules</div>
+      <div class="pdbr">By Katyayani Organics</div>
+      <div class="pdpr"><span class="bp">₹4,900</span><span class="op">₹7,000</span><span class="db">30% OFF</span></div>
+      <div class="pdpk">Pack: 1 kg x 10 pc</div>
+      <div class="vt">Select Variant</div>
+      <div class="vr"><div class="vc sel">1 kg x 10 — ₹4,900</div><div class="vc">500g x 20 — ₹5,200</div><div class="vc">250g x 40 — ₹5,800</div></div>
+      <div class="pdac" onclick="go('cart')">Add to Cart</div>
+      <div class="pds"><div class="st">Product Details</div>
+        <div class="spr"><div class="sk">Brand</div><div class="sv">Katyayani</div></div>
+        <div class="spr"><div class="sk">Category</div><div class="sv">Fertilizer</div></div>
+        <div class="spr"><div class="sk">Active Ingredient</div><div class="sv">Humic Acid + Fulvic Acid</div></div>
+        <div class="spr"><div class="sk">Concentration</div><div class="sv">98%</div></div>
+        <div class="spr"><div class="sk">Form</div><div class="sv">Granules</div></div>
+        <div class="spr"><div class="sk">Application</div><div class="sv">All Plants & Home Garden</div></div>
+        <div class="spr"><div class="sk">Shelf Life</div><div class="sv">3 Years</div></div>
+      </div>
+    </div>
+    <div style="height:16px"></div>
+  </div>
+  <div class="bnav"><div class="ni" onclick="go('home')"><span class="material-icons-outlined">home</span>Home</div><div class="ni" onclick="go('category')"><span class="material-icons-outlined">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
+</div>
+
+</div>
+
+<script>
+const mainTabs=['home','category','vip','profile'];
+let current='home';
+function go(page){
+  if(page===current)return;
+  const prev=document.getElementById('page-'+current);
+  const next=document.getElementById('page-'+page);
+  if(!next)return;
+  // Determine direction
+  const isOverlay=!mainTabs.includes(page);
+  const wasOverlay=!mainTabs.includes(current);
+  prev.classList.remove('active');
+  if(isOverlay){prev.style.transform='translateX(0)'}
+  else if(wasOverlay){prev.style.transform='translateX(100%)'}
+  else{
+    const ci=mainTabs.indexOf(current),ni=mainTabs.indexOf(page);
+    prev.style.transform=ni>ci?'translateX(-30%)':'translateX(30%)';
+  }
+  prev.style.opacity='0';
+  setTimeout(()=>{prev.style.pointerEvents='none'},300);
+  next.style.transform='translateX(0)';
+  next.classList.add('active');
+  // Reset scroll
+  const sc=next.querySelector('.sc')||next.querySelector('.vbg');
+  if(sc)sc.scrollTop=0;
+  current=page;
+}
+</script>
+</body>
+</html>
