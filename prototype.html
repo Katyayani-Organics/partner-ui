@@ -9,7 +9,8 @@
 <style>
 :root{--g:#1B6B2A;--gd:#145222;--gl:#2E7D32;--gg:rgba(27,107,42,.15);--gold:#FFD700;--bronze:#CD7F32;--red:#E53935;--bg:#f7f6f2;--card:#fff;--bdr:#eaeaea;--t1:#1a1a1a;--t2:#555;--t3:#999;--r:16px;--rs:12px;--rx:8px}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden}
+@media(min-width:500px){body{background:#1a1a1a}}
 
 /* Phone */
 .phone{width:100vw;max-width:420px;height:100vh;max-height:900px;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
@@ -226,7 +227,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;
   <div class="tb"><div class="r1"><div class="av"><span class="material-icons">person</span></div><div class="wel"><div class="w1">Welcome! vaibhaw</div><div class="bgs"><div class="bg br"><span class="material-icons">shield</span>Bronze</div><div class="bg co"><span class="material-icons">monetization_on</span>25</div></div></div><div class="ti"><div class="bell"><span class="material-icons-outlined">notifications</span></div><div class="cw" onclick="go('cart')"><span class="material-icons-outlined" style="color:#fff">shopping_cart</span><div class="bc">3</div></div></div></div></div>
   <div class="sb" onclick="go('search')"><span class="material-icons">search</span><span>Search Products...</span><span class="material-icons mic">mic</span></div>
   <div class="sc">
-    <div class="bnr"><img src="assets/images/hero_banner.jpeg"></div>
+    <div class="bnr"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/hero_banner.jpeg"></div>
     <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
     <div class="csec"><div class="ch"><h3>Categories</h3><a href="#" onclick="go('category');return false">View All</a></div>
       <div class="cr">
@@ -237,19 +238,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;
         <div class="ci"><div class="ib" style="background:#fff3e0"><span class="material-icons" style="color:#f57c00">spa</span></div><span>Herbicide</span></div>
       </div>
     </div>
-    <div class="strip"><img src="assets/images/strip_banner.jpeg"></div>
+    <div class="strip"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/strip_banner.jpeg"></div>
     <div class="fg">
-      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/humic_acid.webp"></div><div class="fn">HUMIC + FULVIC 98</div></div>
-      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/chakraveer.jpg"></div><div class="fn">Chakraveer</div></div>
-      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/fantasy.jpg"></div><div class="fn">Propycyp</div></div>
-      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/mock_bottle.png"></div><div class="fn">PLANTIVO</div></div>
-      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/garuda.webp"></div><div class="fn">AZOZOLE</div></div>
-      <div class="fc" onclick="go('product')"><div class="fi"><img src="assets/images/fipronil.jpg"></div><div class="fn">DOCTER 505</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/humic_acid.webp"></div><div class="fn">HUMIC + FULVIC 98</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/chakraveer.jpg"></div><div class="fn">Chakraveer</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/fantasy.jpg"></div><div class="fn">Propycyp</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/mock_bottle.png"></div><div class="fn">PLANTIVO</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/garuda.webp"></div><div class="fn">AZOZOLE</div></div>
+      <div class="fc" onclick="go('product')"><div class="fi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/fipronil.jpg"></div><div class="fn">DOCTER 505</div></div>
     </div>
     <div class="nab"><span class="material-icons">new_releases</span><div><h4>NEW ARRIVALS ARE HERE!</h4><p>BE THE FIRST TO STOCK UP!</p></div></div>
     <div class="pg">
-      <div class="pc" onclick="go('product')"><div class="pi"><img src="assets/images/mock_bottle.png"><span class="material-icons ht">favorite_border</span><div class="qty">250 gm x 20 pc</div></div><div class="pd"><div class="pn">Plantivo | Tebuconazole 50%</div><div class="mrp">₹39600</div><div class="prr"><span class="pr">₹18160</span><span class="ds">54% OFF</span></div><button class="ab" onclick="event.stopPropagation()">ADD</button><div class="opts">3 options</div></div></div>
-      <div class="pc" onclick="go('product')"><div class="pi"><img src="assets/images/garuda.webp"><span class="material-icons ht">favorite_border</span><div class="qty">250 ML x 40 pc</div></div><div class="pd"><div class="pn">ETHER 39 | Ethephon 39% SL</div><div class="mrp">₹19600</div><div class="prr"><span class="pr">₹10560</span><span class="ds">46% OFF</span></div><button class="ab" onclick="event.stopPropagation()">ADD</button><div class="opts">2 options</div></div></div>
+      <div class="pc" onclick="go('product')"><div class="pi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/mock_bottle.png"><span class="material-icons ht">favorite_border</span><div class="qty">250 gm x 20 pc</div></div><div class="pd"><div class="pn">Plantivo | Tebuconazole 50%</div><div class="mrp">₹39600</div><div class="prr"><span class="pr">₹18160</span><span class="ds">54% OFF</span></div><button class="ab" onclick="event.stopPropagation()">ADD</button><div class="opts">3 options</div></div></div>
+      <div class="pc" onclick="go('product')"><div class="pi"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/garuda.webp"><span class="material-icons ht">favorite_border</span><div class="qty">250 ML x 40 pc</div></div><div class="pd"><div class="pn">ETHER 39 | Ethephon 39% SL</div><div class="mrp">₹19600</div><div class="prr"><span class="pr">₹10560</span><span class="ds">46% OFF</span></div><button class="ab" onclick="event.stopPropagation()">ADD</button><div class="opts">2 options</div></div></div>
     </div>
     <div style="height:70px"></div>
   </div>
@@ -262,17 +263,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;
   <div class="ctb"><div class="av"><span class="material-icons">person</span></div><div class="icons"><span class="material-icons" onclick="go('search')">search</span><span class="material-icons" onclick="go('cart')">shopping_cart</span><span class="material-icons">phone</span></div></div>
   <div class="sc" style="background:#fff">
     <div class="ctt">Categories</div>
-    <div class="cc"><div class="cimg"><img src="assets/images/chakraveer_ins.png"></div><div class="cn">Pesticide</div><span class="material-icons arr">chevron_right</span></div>
-    <div class="cc"><div class="cimg"><img src="assets/images/humic_acid.webp"></div><div class="cn">Fertilizer</div><span class="material-icons arr">chevron_right</span></div>
-    <div class="cc"><div class="cimg"><img src="assets/images/garuda.webp"></div><div class="cn">Fungicide</div><span class="material-icons arr">chevron_right</span></div>
-    <div class="cc"><div class="cimg"><img src="assets/images/emazar.png"></div><div class="cn">Herbicide</div><span class="material-icons arr">chevron_right</span></div>
-    <div class="cc"><div class="cimg"><img src="assets/images/fantasy.jpg"></div><div class="cn">Combos</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/chakraveer_ins.png"></div><div class="cn">Pesticide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/humic_acid.webp"></div><div class="cn">Fertilizer</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/garuda.webp"></div><div class="cn">Fungicide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/emazar.png"></div><div class="cn">Herbicide</div><span class="material-icons arr">chevron_right</span></div>
+    <div class="cc"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/fantasy.jpg"></div><div class="cn">Combos</div><span class="material-icons arr">chevron_right</span></div>
     <div class="ctt">Catalogues</div><div class="cst">Chemicals</div>
-    <div class="clr"><div class="ct"><img src="assets/images/chakraveer_ins.png"></div><div class="cn">Chemical Insecticides</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
-    <div class="clr"><div class="ct"><img src="assets/images/garuda.webp"></div><div class="cn">Chemical Fungicide</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
-    <div class="clr"><div class="ct"><img src="assets/images/humic_acid.webp"></div><div class="cn">NPK Fertilizer</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/chakraveer_ins.png"></div><div class="cn">Chemical Insecticides</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/garuda.webp"></div><div class="cn">Chemical Fungicide</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/humic_acid.webp"></div><div class="cn">NPK Fertilizer</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
     <div class="cst" style="padding-top:8px">Bio</div>
-    <div class="clr"><div class="ct"><img src="assets/images/fantasy.jpg"></div><div class="cn">Bio Product Catalogue</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
+    <div class="clr"><div class="ct"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/fantasy.jpg"></div><div class="cn">Bio Product Catalogue</div><div class="ca"><span class="material-icons-outlined vw">visibility</span><span class="material-icons-outlined dl">download</span></div></div>
     <div style="height:16px"></div>
   </div>
   <div class="bnav"><div class="ni" onclick="go('home')"><span class="material-icons-outlined">home</span>Home</div><div class="ni on" onclick="go('category')"><span class="material-icons">grid_view</span>Category</div><div class="ni" onclick="go('vip')"><span class="material-icons-outlined">star_outline</span>VIP</div><div class="ni" onclick="go('profile')"><span class="material-icons-outlined">person_outline</span>Profile</div></div>
@@ -349,9 +350,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;
   <div class="tb"><div class="r1"><div class="av"><span class="material-icons">person</span></div><div class="wel"><div class="w1" style="font-size:16px;font-weight:800">My Cart</div><div style="font-size:10px;color:rgba(255,255,255,.65);margin-top:1px">3 items</div></div><div class="ti"><div class="bell" onclick="go('home')" style="cursor:pointer"><span class="material-icons-outlined" style="color:#fff">arrow_back</span></div></div></div></div>
   <div class="sc" style="background:#fff">
     <div style="height:10px"></div>
-    <div class="cti"><div class="cimg"><img src="assets/images/mock_bottle.png"></div><div class="cinfo"><div class="cn">Plantivo | Tebuconazole 50% + Trifloxystrobin</div><div class="cq">250 gm x 20 pc</div><div class="cm">₹39,600</div><div class="cp">₹18,160</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">1</div><button>+</button></div></div></div>
-    <div class="cti"><div class="cimg"><img src="assets/images/garuda.webp"></div><div class="cinfo"><div class="cn">ETHER 39 | Ethephon 39% SL</div><div class="cq">250 ML x 40 pc</div><div class="cm">₹19,600</div><div class="cp">₹10,560</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">2</div><button>+</button></div></div></div>
-    <div class="cti"><div class="cimg"><img src="assets/images/humic_acid.webp"></div><div class="cinfo"><div class="cn">Humic Acid + Fulvic Acid 98</div><div class="cq">1 kg x 10 pc</div><div class="cm">₹7,000</div><div class="cp">₹4,900</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">1</div><button>+</button></div></div></div>
+    <div class="cti"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/mock_bottle.png"></div><div class="cinfo"><div class="cn">Plantivo | Tebuconazole 50% + Trifloxystrobin</div><div class="cq">250 gm x 20 pc</div><div class="cm">₹39,600</div><div class="cp">₹18,160</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">1</div><button>+</button></div></div></div>
+    <div class="cti"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/garuda.webp"></div><div class="cinfo"><div class="cn">ETHER 39 | Ethephon 39% SL</div><div class="cq">250 ML x 40 pc</div><div class="cm">₹19,600</div><div class="cp">₹10,560</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">2</div><button>+</button></div></div></div>
+    <div class="cti"><div class="cimg"><img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/humic_acid.webp"></div><div class="cinfo"><div class="cn">Humic Acid + Fulvic Acid 98</div><div class="cq">1 kg x 10 pc</div><div class="cm">₹7,000</div><div class="cp">₹4,900</div></div><div class="cact"><span class="material-icons del">delete_outline</span><div class="qc"><button>-</button><div class="q">1</div><button>+</button></div></div></div>
     <div class="coupon"><span class="material-icons">local_offer</span><span>Apply Coupon Code</span><span class="material-icons arr">chevron_right</span></div>
     <div class="cs"><div class="csr"><span>Subtotal (4 items)</span><span>₹44,180</span></div><div class="csr"><span>Delivery</span><span class="grn">FREE</span></div><div class="csr"><span>Discount</span><span class="grn">- ₹2,200</span></div><div class="csr tot"><span>Total</span><span>₹41,980</span></div></div>
     <div class="cobtn">Proceed to Checkout</div>
@@ -367,7 +368,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a1a;display:flex;
       <div class="bk" onclick="go('home')"><span class="material-icons">arrow_back</span></div>
       <div class="fv"><span class="material-icons">favorite_border</span></div>
       <div class="sr"><span class="material-icons">share</span></div>
-      <img src="assets/images/humic_acid.webp">
+      <img src="https://raw.githubusercontent.com/Katyayani-Organics/partner-ui/master/assets/images/humic_acid.webp">
       <div class="idots"><div class="d on"></div><div class="d"></div><div class="d"></div><div class="d"></div></div>
     </div>
     <div class="pdb">
